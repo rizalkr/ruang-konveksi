@@ -7,6 +7,7 @@ export interface GaleriProps {
 
 /**
  * Responsive photo gallery showcasing workshop production output and craftsmanship.
+ * Styled with Workwear Textile tokens: mist borders, off-white fallback surfaces, ink/slate typography.
  * Utilizes native lazy-loaded standard img tags for optimal mobile performance and data conservation.
  */
 export function Galeri({ foto, namaBisnis }: GaleriProps) {
@@ -30,10 +31,10 @@ export function Galeri({ foto, namaBisnis }: GaleriProps) {
       className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8"
     >
       <div className="mb-8">
-        <h2 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">
+        <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
           Galeri Hasil Produksi
         </h2>
-        <p className="mt-2 text-sm text-neutral-600 sm:text-base">
+        <p className="mt-2 text-sm text-slate sm:text-base">
           Dokumentasi pengerjaan pesanan dan kualitas jahitan {businessName}.
         </p>
       </div>
@@ -42,7 +43,7 @@ export function Galeri({ foto, namaBisnis }: GaleriProps) {
         {validFoto.map((src, index) => (
           <div
             key={`${src}-${index}`}
-            className="group relative aspect-square overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 shadow-sm"
+            className="group relative aspect-square overflow-hidden rounded-2xl border border-mist bg-page-bg shadow-sm"
           >
             <img
               src={src}
@@ -59,4 +60,3 @@ export function Galeri({ foto, namaBisnis }: GaleriProps) {
     </section>
   );
 }
-

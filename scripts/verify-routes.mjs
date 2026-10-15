@@ -7,11 +7,15 @@ async function wait(ms) {
 }
 
 async function main() {
+  let serverLogs = "";
   const nextServer = spawn(
     "node",
-    ["./node_modules/next/dist/bin/next", "start", "-p", String(PORT)],
-    { stdio: "ignore" },
+    ["./node_modules/next/dist/bin/next", "start", "-p", String(PORT), "-H", "127.0.0.1"],
+    { stdio: "pipe" },
   );
+
+  nextServer.stdout?.on("data", (d) => { serverLogs += d.toString(); });
+  nextServer.stderr?.on("data", (d) => { serverLogs += d.toString(); });
 
   try {
     let ready = false;
@@ -27,7 +31,7 @@ async function main() {
     }
 
     if (!ready) {
-      throw new Error("Server failed to start");
+      throw new Error(`Server failed to start. Logs:\n${serverLogs}`);
     }
 
     // 1. Verify demo route

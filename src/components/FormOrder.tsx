@@ -53,40 +53,40 @@ export function FormOrder({
   });
 
   return (
-    <div className="flex flex-col space-y-6 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-      <div className="border-b border-neutral-100 pb-4">
-        <h3 className="text-lg font-bold text-neutral-900 sm:text-xl">
+    <div className="flex flex-col space-y-6 rounded-2xl border border-mist bg-white p-6 shadow-sm text-ink">
+      <div className="border-b border-mist pb-4">
+        <h3 className="text-lg font-bold text-ink sm:text-xl">
           Formulir Pemesanan
         </h3>
-        <p className="mt-1 text-xs text-neutral-500 sm:text-sm">
+        <p className="mt-1 text-xs text-slate sm:text-sm">
           Detail pesanan Anda akan otomatis diformat dan dikirimkan ke WhatsApp resmi kami.
         </p>
       </div>
 
       {/* Synchronized Live Order Summary */}
-      <div className="rounded-xl border border-neutral-200 bg-neutral-50/80 p-4 text-xs text-neutral-700 sm:text-sm">
-        <div className="font-semibold text-neutral-900">Ringkasan Spesifikasi:</div>
+      <div className="rounded-xl border border-mist bg-page-bg p-4 text-xs text-slate sm:text-sm">
+        <div className="font-semibold text-ink">Ringkasan Spesifikasi:</div>
         <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1.5">
           <div>
-            <span className="text-neutral-500">Produk:</span>{" "}
-            <span className="font-semibold text-neutral-900">{produk}</span>
+            <span className="text-slate">Produk:</span>{" "}
+            <span className="font-semibold text-ink">{produk}</span>
           </div>
           <div>
-            <span className="text-neutral-500">Bahan:</span>{" "}
-            <span className="font-semibold text-neutral-900">{bahan}</span>
+            <span className="text-slate">Bahan:</span>{" "}
+            <span className="font-semibold text-ink">{bahan}</span>
           </div>
           <div>
-            <span className="text-neutral-500">Branding:</span>{" "}
-            <span className="font-semibold text-neutral-900">{branding}</span>
+            <span className="text-slate">Branding:</span>{" "}
+            <span className="font-semibold text-ink">{branding}</span>
           </div>
           <div>
-            <span className="text-neutral-500">Jumlah:</span>{" "}
-            <span className="font-semibold text-neutral-900">{`${jumlah} pcs`}</span>
+            <span className="text-slate">Jumlah:</span>{" "}
+            <span className="font-semibold text-ink">{`${jumlah} pcs`}</span>
           </div>
         </div>
-        <div className="mt-2.5 border-t border-neutral-200 pt-2 text-xs sm:text-sm">
-          <span className="text-neutral-500">Estimasi Total:</span>{" "}
-          <strong className="font-bold text-neutral-900">{estimasiString}</strong>
+        <div className="mt-2.5 border-t border-mist pt-2 text-xs sm:text-sm">
+          <span className="text-slate">Estimasi Total:</span>{" "}
+          <strong className="font-bold text-ink">{estimasiString}</strong>
         </div>
       </div>
 
@@ -103,7 +103,7 @@ export function FormOrder({
         <div>
           <label
             htmlFor="order-nama"
-            className="block text-sm font-semibold text-neutral-800"
+            className="block text-sm font-semibold text-ink"
           >
             Nama Pemesan / Kontak
           </label>
@@ -114,7 +114,7 @@ export function FormOrder({
             value={nama}
             onChange={(e) => setNama(e.target.value)}
             placeholder="Contoh: Budi Santoso"
-            className="mt-1.5 block w-full min-h-[48px] rounded-xl border border-neutral-300 bg-white px-3.5 py-3 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+            className="mt-1.5 block w-full min-h-[48px] rounded-xl border border-steel bg-white px-3.5 py-3 text-base text-ink placeholder:text-slate focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors"
           />
         </div>
 
@@ -122,7 +122,7 @@ export function FormOrder({
         <div>
           <label
             htmlFor="order-ukuran"
-            className="block text-sm font-semibold text-neutral-800"
+            className="block text-sm font-semibold text-ink"
           >
             Rincian Ukuran
           </label>
@@ -133,9 +133,9 @@ export function FormOrder({
             value={ukuran}
             onChange={(e) => setUkuran(e.target.value)}
             placeholder="Contoh: S: 10, M: 20, L: 20"
-            className="mt-1.5 block w-full min-h-[48px] rounded-xl border border-neutral-300 bg-white px-3.5 py-3 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+            className="mt-1.5 block w-full min-h-[48px] rounded-xl border border-steel bg-white px-3.5 py-3 text-base text-ink placeholder:text-slate focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors"
           />
-          <p className="mt-1 text-xs text-neutral-500">
+          <p className="mt-1 text-xs text-slate">
             Tuliskan distribusi ukuran sesuai kebutuhan pesanan.
           </p>
         </div>
@@ -144,7 +144,7 @@ export function FormOrder({
         <div>
           <label
             htmlFor="order-catatan"
-            className="block text-sm font-semibold text-neutral-800"
+            className="block text-sm font-semibold text-ink"
           >
             Catatan Desain & Pesanan
           </label>
@@ -155,7 +155,7 @@ export function FormOrder({
             value={catatan}
             onChange={(e) => setCatatan(e.target.value)}
             placeholder="Contoh: Kerah kombinasi warna, sablon di dada kiri dan punggung"
-            className="mt-1.5 block w-full rounded-xl border border-neutral-300 bg-white p-3.5 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+            className="mt-1.5 block w-full rounded-xl border border-steel bg-white p-3.5 text-base text-ink placeholder:text-slate focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors"
           />
         </div>
 
@@ -171,7 +171,7 @@ export function FormOrder({
             <MessageCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
             <span>Kirim Pesanan via WhatsApp</span>
           </a>
-          <p className="mt-2 text-center text-xs text-neutral-500">
+          <p className="mt-2 text-center text-xs text-slate">
             Pesan otomatis tersusun rapi untuk dikirimkan ke WhatsApp resmi {namaBisnis}.
           </p>
         </div>

@@ -7,6 +7,7 @@ export const prospectTemplateConfig: BusinessConfig = {
   tagline: "Spesialis Seragam dan Busana Berkualitas di Solo Raya",
   logo: undefined,
   warnaUtama: "#0f766e",
+  warnaAksen: undefined,
   wa: "6281234567890",
   alamat: "[Contoh] Alamat workshop konveksi di Solo Raya (diisi saat personalisasi prospek)",
   petaUrl: undefined,

@@ -55,16 +55,16 @@ export function Kalkulator({
   const quickQuantityTiers = Array.from(tierSet).sort((a, b) => a - b);
 
   return (
-    <div className="flex flex-col space-y-6 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-      <div className="flex items-center gap-3 border-b border-neutral-100 pb-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-800">
+    <div className="flex flex-col space-y-6 rounded-2xl border border-mist bg-white p-6 shadow-sm text-ink">
+      <div className="flex items-center gap-3 border-b border-mist pb-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-surface text-brand-accent">
           <Calculator className="h-5 w-5" aria-hidden="true" />
         </div>
         <div>
-          <h3 className="text-lg font-bold text-neutral-900 sm:text-xl">
+          <h3 className="text-lg font-bold text-ink sm:text-xl">
             Simulasi Biaya Produksi
           </h3>
-          <p className="text-xs text-neutral-500 sm:text-sm">
+          <p className="text-xs text-slate sm:text-sm">
             Kalkulator interaktif harga dasar, bahan, dan diskon kuantitas.
           </p>
         </div>
@@ -75,7 +75,7 @@ export function Kalkulator({
         <div>
           <label
             htmlFor="kalkulator-produk"
-            className="block text-sm font-semibold text-neutral-800"
+            className="block text-sm font-semibold text-ink"
           >
             Jenis Produk
           </label>
@@ -83,7 +83,7 @@ export function Kalkulator({
             id="kalkulator-produk"
             value={produk}
             onChange={(e) => onProdukChange(e.target.value)}
-            className="mt-1.5 block w-full min-h-[48px] rounded-xl border border-neutral-300 bg-white px-3.5 py-3 text-base text-neutral-900 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+            className="mt-1.5 block w-full min-h-[48px] rounded-xl border border-steel bg-white px-3.5 py-3 text-base text-ink focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors"
           >
             {produkEntries.map(([name, price]) => (
               <option key={name} value={name}>
@@ -97,7 +97,7 @@ export function Kalkulator({
         <div>
           <label
             htmlFor="kalkulator-bahan"
-            className="block text-sm font-semibold text-neutral-800"
+            className="block text-sm font-semibold text-ink"
           >
             Pilihan Bahan
           </label>
@@ -105,7 +105,7 @@ export function Kalkulator({
             id="kalkulator-bahan"
             value={bahan}
             onChange={(e) => onBahanChange(e.target.value)}
-            className="mt-1.5 block w-full min-h-[48px] rounded-xl border border-neutral-300 bg-white px-3.5 py-3 text-base text-neutral-900 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+            className="mt-1.5 block w-full min-h-[48px] rounded-xl border border-steel bg-white px-3.5 py-3 text-base text-ink focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors"
           >
             {bahanEntries.map(([name, price]) => (
               <option key={name} value={name}>
@@ -119,7 +119,7 @@ export function Kalkulator({
         <div>
           <label
             htmlFor="kalkulator-branding"
-            className="block text-sm font-semibold text-neutral-800"
+            className="block text-sm font-semibold text-ink"
           >
             Jenis Branding
           </label>
@@ -127,7 +127,7 @@ export function Kalkulator({
             id="kalkulator-branding"
             value={branding}
             onChange={(e) => onBrandingChange(e.target.value)}
-            className="mt-1.5 block w-full min-h-[48px] rounded-xl border border-neutral-300 bg-white px-3.5 py-3 text-base text-neutral-900 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+            className="mt-1.5 block w-full min-h-[48px] rounded-xl border border-steel bg-white px-3.5 py-3 text-base text-ink focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors"
           >
             {brandingEntries.map(([name, price]) => (
               <option key={name} value={name}>
@@ -141,7 +141,7 @@ export function Kalkulator({
         <div>
           <label
             htmlFor="kalkulator-jumlah"
-            className="block text-sm font-semibold text-neutral-800"
+            className="block text-sm font-semibold text-ink"
           >
             Jumlah Pesanan (pcs)
           </label>
@@ -162,23 +162,23 @@ export function Kalkulator({
                 onJumlahChange(Number.isNaN(parsed) ? 0 : Math.max(0, parsed));
               }}
               placeholder="Masukkan jumlah pcs"
-              className="block w-full min-h-[48px] rounded-xl border border-neutral-300 bg-white px-3.5 py-3 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+              className="block w-full min-h-[48px] rounded-xl border border-steel bg-white px-3.5 py-3 text-base text-ink placeholder:text-slate focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors"
             />
           </div>
 
           {/* Quick selection chips for mobile convenience */}
           {quickQuantityTiers.length > 0 && (
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <span className="text-xs font-medium text-neutral-500">Pilihan cepat:</span>
+              <span className="text-xs font-medium text-slate">Pilihan cepat:</span>
               {quickQuantityTiers.map((tier) => (
                 <button
                   key={tier}
                   type="button"
                   onClick={() => onJumlahChange(tier)}
-                  className={`inline-flex min-h-[44px] min-w-[56px] items-center justify-center rounded-xl px-3.5 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 ${
+                  className={`inline-flex min-h-[44px] min-w-[56px] items-center justify-center rounded-xl px-3.5 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
                     jumlah === tier
-                      ? "border border-neutral-900 bg-neutral-900 text-white shadow-sm"
-                      : "border border-neutral-200 bg-neutral-100 text-neutral-800 hover:bg-neutral-200"
+                      ? "border border-brand-primary bg-brand-primary text-white shadow-sm"
+                      : "border border-mist bg-page-bg text-ink hover:bg-neutral-200"
                   }`}
                 >
                   {`${tier} pcs`}
@@ -190,17 +190,17 @@ export function Kalkulator({
       </div>
 
       {/* Live Estimated Price Display */}
-      <div className="rounded-2xl border border-neutral-200 bg-neutral-50/80 p-5">
-        <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+      <div className="rounded-2xl border border-mist bg-page-bg p-5">
+        <div className="text-xs font-semibold uppercase tracking-wider text-slate">
           Kisaran Estimasi Total
         </div>
-        <div className="mt-1 text-2xl font-extrabold tracking-tight text-neutral-900 sm:text-3xl">
+        <div className="mt-1 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
           {formatRentangEstimasi(estimasiResult.rentangMin, estimasiResult.rentangMax)}
         </div>
-        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-600 sm:text-sm">
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate sm:text-sm">
           <span>
             Estimasi per pcs:{" "}
-            <strong className="font-semibold text-neutral-900">
+            <strong className="font-semibold text-ink">
               {formatRupiah(estimasiResult.estimasiPerPcs)}
             </strong>
           </span>
@@ -225,9 +225,9 @@ export function Kalkulator({
         </div>
       )}
 
-      {/* Mandatory visible disclaimer */}
-      <div className="flex items-start gap-2.5 rounded-xl border border-neutral-200 bg-white p-3.5 text-xs text-neutral-600 sm:text-sm shadow-sm">
-        <Info className="mt-0.5 h-4 w-4 shrink-0 text-neutral-500" aria-hidden="true" />
+      {/* Mandatory visible disclaimer on Thread Cream surface */}
+      <div className="flex items-start gap-2.5 rounded-xl border border-amber-200/80 bg-accent-surface p-3.5 text-xs text-accent-text sm:text-sm shadow-sm">
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand-accent" aria-hidden="true" />
         <p>Estimasi, harga final dikonfirmasi via WhatsApp.</p>
       </div>
     </div>

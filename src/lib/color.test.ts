@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   calculateContrastRatio,
+  deriveHoverColor,
   evaluateColorContrast,
   getAccessibleTextColor,
   getRelativeLuminance,
   hexToRgb,
+  isValidHexColor,
 } from "./color";
 
 describe("Color accessibility and contrast utilities", () => {
@@ -88,6 +90,63 @@ describe("Color accessibility and contrast utilities", () => {
       expect(result.ratio).toBeGreaterThanOrEqual(4.22);
       expect(result.passesAALarge).toBe(true);
     }
+  });
+
+  it("validates safe hex color values accurately with isValidHexColor", () => {
+    // Valid 3-char and 6-char hex
+    expect(isValidHexColor("#153E46")).toBe(true);
+    expect(isValidHexColor("#A94F24")).toBe(true);
+    expect(isValidHexColor("#ffffff")).toBe(true);
+    expect(isValidHexColor("#fff")).toBe(true);
+    expect(isValidHexColor("#000")).toBe(true);
+
+    // Invalid values
+    expect(isValidHexColor("invalid")).toBe(false);
+    expect(isValidHexColor("rgb(0,0,0)")).toBe(false);
+    expect(isValidHexColor("#12345")).toBe(false);
+    expect(isValidHexColor("#1234567")).toBe(false);
+    expect(isValidHexColor("")).toBe(false);
+    expect(isValidHexColor(null)).toBe(false);
+    expect(isValidHexColor(undefined)).toBe(false);
+    expect(isValidHexColor("javascript:alert(1)")).toBe(false);
+  });
+
+  it("derives consistent hover darkened colors with deriveHoverColor", () => {
+    const hoverPrimary = deriveHoverColor("#153E46");
+    expect(hoverPrimary).toMatch(/^#[0-9a-f]{6}$/i);
+    // Darkened version should have lower luminance than original
+    expect(getRelativeLuminance(hoverPrimary)).toBeLessThan(
+      getRelativeLuminance("#153E46")
+    );
+  });
+
+  it("verifies Workwear Textile palette contrast meets or exceeds WCAG AA standards", () => {
+    // Deep Petrol (#153E46) on white
+    const deepPetrolResult = evaluateColorContrast("#153E46");
+    expect(deepPetrolResult.textColor).toBe("#ffffff");
+    expect(deepPetrolResult.ratio).toBeGreaterThanOrEqual(4.5);
+    expect(deepPetrolResult.ratio).toBeGreaterThan(11.0);
+    expect(deepPetrolResult.passesAA).toBe(true);
+
+    // Ink (#18212B) on Textile Off-white (#F7F5F0)
+    const inkLum = getRelativeLuminance("#18212B");
+    const offWhiteLum = getRelativeLuminance("#F7F5F0");
+    const inkOnPageRatio = calculateContrastRatio(inkLum, offWhiteLum);
+    expect(inkOnPageRatio).toBeGreaterThanOrEqual(4.5);
+    expect(inkOnPageRatio).toBeGreaterThan(14.0);
+
+    // Slate (#596575) on Textile Off-white (#F7F5F0)
+    const slateLum = getRelativeLuminance("#596575");
+    const slateOnPageRatio = calculateContrastRatio(slateLum, offWhiteLum);
+    expect(slateOnPageRatio).toBeGreaterThanOrEqual(4.5);
+    expect(slateOnPageRatio).toBeGreaterThan(5.0);
+
+    // Dark Copper (#74351A) on Thread Cream (#F7EDE4)
+    const darkCopperLum = getRelativeLuminance("#74351A");
+    const threadCreamLum = getRelativeLuminance("#F7EDE4");
+    const copperOnCreamRatio = calculateContrastRatio(darkCopperLum, threadCreamLum);
+    expect(copperOnCreamRatio).toBeGreaterThanOrEqual(4.5);
+    expect(copperOnCreamRatio).toBeGreaterThan(8.0);
   });
 });
 

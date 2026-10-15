@@ -13,9 +13,20 @@ const config: Config = {
       },
       colors: {
         brand: {
-          primary: "var(--brand-primary)",
-          text: "var(--brand-text)",
+          primary: "var(--color-primary)",
+          "primary-hover": "var(--color-primary-hover)",
+          accent: "var(--color-accent)",
         },
+        page: {
+          bg: "var(--color-page-bg)",
+          surface: "var(--color-surface)",
+        },
+        ink: "var(--color-ink)",
+        slate: "var(--color-slate)",
+        mist: "var(--color-mist)",
+        steel: "var(--color-steel)",
+        "accent-surface": "var(--color-accent-surface)",
+        "accent-text": "var(--color-accent-text)",
       },
     },
   },
@@ -23,4 +34,3 @@ const config: Config = {
 };
 
 export default config;
-

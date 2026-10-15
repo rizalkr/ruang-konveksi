@@ -36,6 +36,7 @@ export type BusinessConfig = {
   tagline: string;
   logo?: string;
   warnaUtama: string;
+  warnaAksen?: string;
   wa: string; // International format without +
   alamat: string;
   petaUrl?: string;

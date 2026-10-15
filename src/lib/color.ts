@@ -1,9 +1,29 @@
 /**
- * Utility functions for WCAG 2.1 relative luminance and contrast ratio calculation.
+ * Utility functions for WCAG 2.1 relative luminance and contrast ratio calculation,
+ * and color validation for safe CSS custom property injection.
  */
 
 const DARK_SLATE = "#0f172a";
 const WHITE = "#ffffff";
+
+/**
+ * Validates whether a string is a safe hex color value (#RGB or #RRGGBB).
+ * Used to sanitize config values before injecting them as CSS custom properties.
+ */
+export function isValidHexColor(value: unknown): boolean {
+  if (typeof value !== "string") return false;
+  return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(value.trim());
+}
+
+/**
+ * Derives a hover-darkened variant from a hex color by reducing each channel by ~20%.
+ */
+export function deriveHoverColor(hex: string): string {
+  const { r, g, b } = hexToRgb(hex);
+  const darken = (v: number) => Math.max(0, Math.round(v * 0.78));
+  const toHex = (v: number) => v.toString(16).padStart(2, "0");
+  return `#${toHex(darken(r))}${toHex(darken(g))}${toHex(darken(b))}`;
+}
 
 /**
  * Parses a 3-character or 6-character hex string into RGB numeric values [0-255].

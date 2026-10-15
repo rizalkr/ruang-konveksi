@@ -10,6 +10,7 @@ export interface UlasanProps {
 
 /**
  * Customer review cards presenting authentic social proof and client satisfaction.
+ * Styled using Workwear Textile design tokens (white surface, mist borders, ink/slate typography).
  * Conditionally rendered only when the business configuration provides testimonials.
  */
 export function Ulasan({ ulasan }: UlasanProps) {
@@ -32,10 +33,10 @@ export function Ulasan({ ulasan }: UlasanProps) {
       className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8"
     >
       <div className="mb-8">
-        <h2 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">
+        <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
           Ulasan Pelanggan
         </h2>
-        <p className="mt-2 text-sm text-neutral-600 sm:text-base">
+        <p className="mt-2 text-sm text-slate sm:text-base">
           Pengalaman dan testimoni dari pelanggan yang telah memesan di workshop kami.
         </p>
       </div>
@@ -44,7 +45,7 @@ export function Ulasan({ ulasan }: UlasanProps) {
         {validUlasan.map((item, index) => (
           <article
             key={`${item.nama}-${index}`}
-            className="flex flex-col justify-between rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm"
+            className="flex flex-col justify-between rounded-2xl border border-mist bg-white p-5 sm:p-6 shadow-sm"
           >
             <div className="space-y-3">
               <div
@@ -60,16 +61,16 @@ export function Ulasan({ ulasan }: UlasanProps) {
                   />
                 ))}
               </div>
-              <blockquote className="text-sm leading-relaxed text-neutral-700 sm:text-base">
+              <blockquote className="text-sm leading-relaxed text-ink sm:text-base">
                 &ldquo;{item.teks}&rdquo;
               </blockquote>
             </div>
 
-            <div className="mt-4 border-t border-neutral-100 pt-3">
-              <p className="text-sm font-semibold text-neutral-900 sm:text-base">
+            <div className="mt-4 border-t border-mist pt-3">
+              <p className="text-sm font-semibold text-ink sm:text-base">
                 {item.nama}
               </p>
-              <span className="text-xs text-neutral-500">
+              <span className="text-xs text-slate">
                 Pelanggan Terverifikasi
               </span>
             </div>
@@ -79,4 +80,3 @@ export function Ulasan({ ulasan }: UlasanProps) {
     </section>
   );
 }
-

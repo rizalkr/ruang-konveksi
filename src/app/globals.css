@@ -2,7 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  scroll-behavior: smooth;
+@layer base {
+  :root {
+    /* === Workwear Textile Design Tokens === */
+
+    /* Brand tokens (overridable per config via inline style) */
+    --color-primary: #153E46;
+    --color-primary-hover: #0F2F35;
+    --color-accent: #A94F24;
+
+    /* Neutral palette (consistent across all configs) */
+    --color-page-bg: #F7F5F0;
+    --color-surface: #FFFFFF;
+    --color-ink: #18212B;
+    --color-slate: #596575;
+    --color-mist: #D9DEE5;
+    --color-steel: #7C8795;
+    --color-accent-surface: #F7EDE4;
+    --color-accent-text: #74351A;
+
+    /* Semantic (preserved for functional states) */
+    --color-success: #059669;
+    --color-warning: #d97706;
+    --color-error: #dc2626;
+  }
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* Clears sticky navbar height on anchor navigation */
+}
+
+body {
+  background-color: var(--color-page-bg);
+  color: var(--color-ink);
+}

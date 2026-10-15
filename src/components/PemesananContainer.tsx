@@ -12,7 +12,9 @@ interface PemesananContainerProps {
 
 /**
  * Interactive Client Component synchronizing calculator state and WhatsApp order form.
- * Maintains id="kalkulator" for smooth anchor linking from Hero and Category cards.
+ * Anchored visually with a Deep Petrol (brand-primary) section background as specified in the Workwear Textile design system.
+ * Contains two white cards (Kalkulator & FormOrder) for maximum readability and crisp visual rhythm.
+ * Maintains id="kalkulator" for smooth anchor linking from Navbar, Hero, and Category cards.
  */
 export function PemesananContainer({ config }: PemesananContainerProps) {
   const kalkulatorConfig = config?.kalkulator;
@@ -56,43 +58,48 @@ export function PemesananContainer({ config }: PemesananContainerProps) {
     <section
       id="kalkulator"
       aria-label="Kalkulator Estimasi & Formulir Pemesanan"
-      className="scroll-mt-8 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8"
+      className="scroll-mt-8 bg-brand-primary text-white py-16"
     >
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">
-          Kalkulator Estimasi & Pemesanan
-        </h2>
-        <p className="mt-2 text-sm text-neutral-600 sm:text-base">
-          Sesuaikan spesifikasi produk untuk melihat simulasi kisaran harga langsung, lalu kirimkan rincian pesanan Anda ke WhatsApp.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-        <div className="lg:col-span-7">
-          <Kalkulator
-            kalkulatorConfig={kalkulatorConfig}
-            produk={produk}
-            bahan={bahan}
-            branding={branding}
-            jumlah={jumlah}
-            onProdukChange={setProduk}
-            onBahanChange={setBahan}
-            onBrandingChange={setBranding}
-            onJumlahChange={setJumlah}
-            estimasiResult={estimasiResult}
-          />
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <span className="text-xs font-semibold uppercase tracking-wider text-white/70">
+            Kalkulator Estimasi
+          </span>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+            Hitung Estimasi Harga Sesuai Kebutuhan Anda
+          </h2>
+          <p className="mt-2 text-sm text-white/80 sm:text-base">
+            Pilih spesifikasi produk, bahan, dan jumlah pesanan untuk melihat estimasi harga. Harga final akan dikonfirmasi via WhatsApp.
+          </p>
         </div>
-        <div className="lg:col-span-5">
-          <FormOrder
-            phone={config.wa}
-            namaBisnis={config.nama}
-            warnaUtama={config.warnaUtama}
-            produk={produk}
-            bahan={bahan}
-            branding={branding}
-            jumlah={jumlah}
-            estimasiString={estimasiString}
-          />
+
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <Kalkulator
+              kalkulatorConfig={kalkulatorConfig}
+              produk={produk}
+              bahan={bahan}
+              branding={branding}
+              jumlah={jumlah}
+              onProdukChange={setProduk}
+              onBahanChange={setBahan}
+              onBrandingChange={setBranding}
+              onJumlahChange={setJumlah}
+              estimasiResult={estimasiResult}
+            />
+          </div>
+          <div className="lg:col-span-5">
+            <FormOrder
+              phone={config.wa}
+              namaBisnis={config.nama}
+              warnaUtama={config.warnaUtama}
+              produk={produk}
+              bahan={bahan}
+              branding={branding}
+              jumlah={jumlah}
+              estimasiString={estimasiString}
+            />
+          </div>
         </div>
       </div>
     </section>
