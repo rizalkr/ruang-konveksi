@@ -16,12 +16,6 @@ describe("KatalogKategori Component", () => {
     }
   });
 
-  it("renders visible price disclaimer for demo prices", () => {
-    const html = renderToString(<KatalogKategori kategori={demoGenerikConfig.kategori} />);
-    expect(html).toContain(
-      "Harga pada demo ini hanya contoh. Harga final dikonfirmasi melalui WhatsApp.",
-    );
-  });
 
   it("renders formatted starting prices in 'Mulai Rp ... / pcs' format", () => {
     const html = renderToString(<KatalogKategori kategori={demoGenerikConfig.kategori} />);

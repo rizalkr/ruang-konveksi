@@ -5,15 +5,20 @@ import { Hero } from "./Hero";
 import { demoGenerikConfig } from "@/config/demo-generik";
 import { calculateContrastRatio, getAccessibleTextColor, getRelativeLuminance } from "@/lib/color";
 
-describe("Hero Component", () => {
-  it("renders business name and tagline correctly", () => {
+describe("Hero Component (Product Editorial)", () => {
+  it("renders Product Editorial headline, eyebrow, and value proposition description", () => {
     const html = renderToString(<Hero config={demoGenerikConfig} />);
-    expect(html).toContain("Rumah Konveksi");
-    expect(html).toContain("Konveksi Seragam, Kaos, Jaket, dan Busana Berkualitas di Solo Raya");
+    expect(html).toContain("KONVEKSI CUSTOM · SOLO RAYA");
+    expect(html).toContain("Seragam &amp; Apparel untuk Kebutuhan Bisnis");
+    expect(html).toContain(demoGenerikConfig.tagline);
+    expect(html).toContain(`aria-label="Profil ${demoGenerikConfig.nama}"`);
   });
 
-  it("renders WhatsApp CTA button with correct typography (>= 18.67px) and accessible colors", () => {
+  it("renders WhatsApp CTA button with 'Konsultasi via WhatsApp' and accessible colors", () => {
     const html = renderToString(<Hero config={demoGenerikConfig} />);
+
+    // Button label
+    expect(html).toContain("Konsultasi via WhatsApp");
 
     // Font size check: text-[19px] font-bold sm:text-xl
     expect(html).toContain("text-[19px]");
@@ -30,9 +35,8 @@ describe("Hero Component", () => {
     const bgLum = getRelativeLuminance(demoGenerikConfig.warnaUtama);
     const textLum = getRelativeLuminance(expectedTextColor);
     const contrastRatio = calculateContrastRatio(bgLum, textLum);
-    expect(contrastRatio).toBeGreaterThanOrEqual(3.0); // WCAG Large Text
-    expect(contrastRatio).toBeGreaterThanOrEqual(4.5); // Also satisfies normal text
-    expect(contrastRatio).toBeGreaterThan(10.0);
+    expect(contrastRatio).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio).toBeGreaterThan(11.0);
 
     // Link attributes
     expect(html).toContain('target="_blank"');
@@ -43,16 +47,15 @@ describe("Hero Component", () => {
     expect(html).toContain("focus-visible:outline-neutral-900");
   });
 
-  it("renders Estimasi CTA button with correct typography (>= 18.67px) and anchor link", () => {
+  it("renders Estimasi CTA button targeting #kalkulator with 'Hitung Estimasi' text", () => {
     const html = renderToString(<Hero config={demoGenerikConfig} />);
 
     // Anchor link
     expect(html).toContain('href="#kalkulator"');
+    expect(html).toContain("Hitung Estimasi");
 
-    // Font size check
+    // Typography & Contrast check
     expect(html).toContain("text-neutral-800");
-
-    // Secondary contrast check: #262626 on #ffffff
     const whiteLum = getRelativeLuminance("#ffffff");
     const textLum = getRelativeLuminance("#262626");
     const contrastRatio = calculateContrastRatio(whiteLum, textLum);
@@ -63,16 +66,21 @@ describe("Hero Component", () => {
     expect(html).toContain("focus-visible:outline-neutral-900");
   });
 
-  it("renders logo when present, and omits logo container when undefined", () => {
-    const withoutLogo = renderToString(
-      <Hero config={{ ...demoGenerikConfig, logo: undefined }} />
-    );
-    expect(withoutLogo).not.toContain("<img");
+  it("does not render production summary metrics in Hero section", () => {
+    const html = renderToString(<Hero config={demoGenerikConfig} />);
 
-    const withLogo = renderToString(<Hero config={demoGenerikConfig} />);
-    expect(withLogo).toContain("<img");
-    expect(withLogo).toContain('src="/pp-nalar.jpeg"');
-    expect(withLogo).toContain('alt="Logo Rumah Konveksi"');
+    expect(html).not.toContain(`MOQ ${demoGenerikConfig.kalkulator.moq} pcs`);
+    expect(html).not.toContain("Lama Pengerjaan");
+    expect(html).not.toContain("Bahan Pilihan");
+  });
+
+  it("renders high quality studio apparel editorial visual in the right column", () => {
+    const html = renderToString(<Hero config={demoGenerikConfig} />);
+
+    expect(html).toContain('src="/images/hero-apparel.jpg"');
+    expect(html).toContain('/images/hero-apparel.webp');
+    expect(html).toContain(`alt="Contoh produk apparel dan seragam kerja ${demoGenerikConfig.nama}"`);
+    expect(html).toContain('loading="eager"');
   });
 
   it("adapts text color for light brand colors to preserve contrast >= 3.0:1", () => {
@@ -90,4 +98,3 @@ describe("Hero Component", () => {
     expect(contrastRatio).toBeGreaterThanOrEqual(3.0);
   });
 });
-

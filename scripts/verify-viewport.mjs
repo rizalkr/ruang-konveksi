@@ -209,6 +209,25 @@ async function main() {
           };
         });
 
+        // Inspect Hero visual apparel image
+        const heroImg = document.querySelector('section:first-of-type img[src*="hero-apparel"]');
+        let heroImgInfo = null;
+        if (heroImg) {
+          const rect = heroImg.getBoundingClientRect();
+          heroImgInfo = {
+            src: heroImg.getAttribute('src'),
+            alt: heroImg.getAttribute('alt'),
+            width: Math.round(rect.width * 100) / 100,
+            height: Math.round(rect.height * 100) / 100,
+            complete: heroImg.complete,
+            naturalWidth: heroImg.naturalWidth,
+            naturalHeight: heroImg.naturalHeight,
+            withinViewport: rect.left >= 0 && rect.right <= clientWidth
+          };
+        }
+
+        const heroSummaryCount = document.querySelectorAll('section:first-of-type div.grid div.flex.items-center').length;
+
         // Inspect catalog CTA buttons (strict >= 48px touch target)
         const catalogButtons = Array.from(document.querySelectorAll('#katalog article a')).map(a => {
           const rect = a.getBoundingClientRect();
@@ -370,6 +389,8 @@ async function main() {
           overflowingElementsCount: overflowingElements.length,
           overflowingElements,
           heroButtons,
+          heroImgInfo,
+          heroSummaryCount,
           catalogButtons,
           catalogImages,
           catalogDisclaimerFound,
@@ -443,6 +464,17 @@ async function main() {
           `Hero button "${btn.text}" font size ${btn.fontSize} is less than 18.67px (WCAG Large Text threshold)`,
         );
       }
+    }
+
+    // Hero visual image assertions
+    if (!inspection.heroImgInfo) {
+      throw new Error("Hero visual apparel image not found in first section");
+    }
+    if (!inspection.heroImgInfo.withinViewport) {
+      throw new Error("Hero visual apparel image is outside viewport boundaries");
+    }
+    if (inspection.heroImgInfo.naturalWidth <= 0) {
+      throw new Error("Hero visual apparel image failed to load (broken image)");
     }
 
     // Catalog CTA buttons assertions (Strict Note 5: >= 48px height)
@@ -763,7 +795,34 @@ async function main() {
     if (screenshotData?.data) {
       fs.mkdirSync(path.dirname(SCREENSHOT_PATH), { recursive: true });
       fs.writeFileSync(SCREENSHOT_PATH, Buffer.from(screenshotData.data, "base64"));
-      console.log("Screenshot successfully saved to:", SCREENSHOT_PATH);
+      console.log("Mobile 360px screenshot successfully saved to:", SCREENSHOT_PATH);
+    }
+
+    // Switch to desktop viewport (1280x800) and capture desktop screenshot
+    const DESKTOP_SCREENSHOT_PATH = path.join(
+      process.cwd(),
+      "public",
+      "desktop-1280-inspection.png",
+    );
+    await sendCommand("Emulation.setDeviceMetricsOverride", {
+      width: 1280,
+      height: 800,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+    await wait(400);
+
+    const desktopScreenshot = await sendCommand("Page.captureScreenshot", {
+      format: "png",
+      captureBeyondViewport: false,
+    });
+
+    if (desktopScreenshot?.data) {
+      fs.writeFileSync(
+        DESKTOP_SCREENSHOT_PATH,
+        Buffer.from(desktopScreenshot.data, "base64"),
+      );
+      console.log("Desktop 1280px screenshot successfully saved to:", DESKTOP_SCREENSHOT_PATH);
     }
 
     ws.close();

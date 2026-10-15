@@ -3,7 +3,7 @@ import type { BusinessConfig } from "./types";
 export const demoGenerikConfig: BusinessConfig = {
   slug: "demo-generik",
   nama: "Rumah Konveksi",
-  tagline: "Konveksi Seragam, Kaos, Jaket, dan Busana Berkualitas di Solo Raya",
+  tagline: "Kami melayani pembuatan seragam kerja, kaos custom, jaket, dan berbagai pakaian lainnya dengan pilihan bahan dan desain sesuai kebutuhan.",
   logo: "/pp-nalar.jpeg",
   warnaUtama: "#153E46",
   warnaAksen: "#A94F24",
