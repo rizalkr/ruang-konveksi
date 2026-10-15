@@ -99,9 +99,15 @@ export function evaluateColorContrast(bgHex: string): ColorContrastResult {
     !warnedColors.has(normalizedHex)
   ) {
     warnedColors.add(normalizedHex);
-    console.warn(
-      `[color] Contrast ratio ${bestRatio.toFixed(2)}:1 for background "${bgHex}" is below WCAG AA 4.5:1 for normal text. Use large or bold text for buttons and badges to satisfy the 3.0:1 threshold.`,
-    );
+    if (!passesAALarge) {
+      console.warn(
+        `[color] Contrast ratio ${bestRatio.toFixed(2)}:1 for background "${bgHex}" fails WCAG AA minimum contrast (requires at least 3.0:1 for large text or 4.5:1 for normal text).`,
+      );
+    } else {
+      console.warn(
+        `[color] Contrast ratio ${bestRatio.toFixed(2)}:1 for background "${bgHex}" satisfies large text (at least 18.67px / 14pt bold or 24px / 18pt normal, 3.0:1) but is below WCAG AA 4.5:1 for normal text.`,
+      );
+    }
   }
 
   return {

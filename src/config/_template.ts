@@ -8,8 +8,8 @@ export const prospectTemplateConfig: BusinessConfig = {
   logo: undefined,
   warnaUtama: "#0f766e",
   wa: "6281234567890",
-  alamat: "Jl. Alamat Usaha No. 12, Solo Raya",
-  petaUrl: "https://maps.google.com/?q=Sukoharjo",
+  alamat: "[Contoh] Alamat workshop konveksi di Solo Raya (diisi saat personalisasi prospek)",
+  petaUrl: undefined,
   jamOperasional: "Senin - Sabtu: 08.00 - 17.00 WIB",
   kategori: [
     {

@@ -38,7 +38,7 @@ export function Hero({ config }: HeroProps) {
             target="_blank"
             rel="noopener noreferrer"
             style={{ backgroundColor: config.warnaUtama, color: textColor }}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-brand-primary text-brand-text px-6 py-3.5 text-lg font-bold sm:text-xl shadow-md hover:opacity-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-all"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-brand-primary text-brand-text px-6 py-3.5 text-[19px] font-bold sm:text-xl shadow-md hover:opacity-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 transition-all"
           >
             <MessageCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
             <span>Hubungi WhatsApp</span>
@@ -46,7 +46,7 @@ export function Hero({ config }: HeroProps) {
 
           <a
             href="#kalkulator"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-neutral-300 bg-white px-6 py-3.5 text-lg font-bold sm:text-xl text-neutral-800 shadow-sm hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 transition-colors"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-neutral-300 bg-white px-6 py-3.5 text-[19px] font-bold sm:text-xl text-neutral-800 shadow-sm hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 transition-colors"
           >
             <Calculator className="w-5 h-5 flex-shrink-0 text-neutral-600" aria-hidden="true" />
             <span>Hitung Estimasi</span>

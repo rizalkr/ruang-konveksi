@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "verify:viewport": "node scripts/verify-viewport.mjs"
   },
   "dependencies": {
     "next": "^15.1.0",

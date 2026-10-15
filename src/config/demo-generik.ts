@@ -6,8 +6,7 @@ export const demoGenerikConfig: BusinessConfig = {
   tagline: "Konveksi Seragam, Kaos, Jaket, dan Busana Berkualitas di Solo Raya",
   warnaUtama: "#1e3a8a",
   wa: "62800000000",
-  alamat: "Jl. Contoh Industri Tekstil No. 00, Kec. Grogol, Kab. Sukoharjo (Alamat Fiktif Contoh)",
-  petaUrl: "https://maps.google.com/?q=Sukoharjo",
+  alamat: "[Contoh] Alamat workshop konveksi di Solo Raya / Sukoharjo (diisi saat personalisasi prospek)",
   jamOperasional: "Senin - Sabtu: 08.00 - 17.00 WIB",
   kategori: [
     {
