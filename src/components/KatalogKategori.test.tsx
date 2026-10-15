@@ -43,9 +43,9 @@ describe("KatalogKategori Component", () => {
     const html = renderToString(<KatalogKategori kategori={demoGenerikConfig.kategori} />);
 
     expect(html).toContain('loading="lazy"');
-    expect(html).toContain('src="/images/placeholders/pdh.svg"');
+    expect(html).toContain('src="/images/products/pdh.webp"');
     expect(html).toContain('alt="Contoh produk PDH"');
-    expect(html).toContain('src="/images/placeholders/kaos.svg"');
+    expect(html).toContain('src="/images/products/kaos.webp"');
   });
 
   it("validates image path syntax correctly with isValidImagePath", () => {

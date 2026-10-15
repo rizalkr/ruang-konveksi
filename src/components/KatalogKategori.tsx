@@ -103,6 +103,14 @@ export function KatalogKategori({ kategori }: KatalogKategoriProps) {
         <p className="mt-2 text-sm text-slate sm:text-base">
           Pilihan kategori konveksi dengan standar kualitas bahan dan jahitan prima.
         </p>
+
+        {/* Visible disclaimer on Thread Cream surface (accent-surface) indicating demo prices are illustrative examples */}
+        <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-amber-200/80 bg-accent-surface p-3.5 text-xs text-accent-text sm:text-sm">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand-accent" aria-hidden="true" />
+          <p>
+            Harga pada demo ini hanya contoh. Harga final dikonfirmasi melalui WhatsApp.
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -114,14 +122,14 @@ export function KatalogKategori({ kategori }: KatalogKategoriProps) {
               key={`${itemTitle}-${index}`}
               className="flex flex-col overflow-hidden rounded-2xl border border-mist bg-white shadow-sm transition-shadow hover:shadow-md"
             >
-              <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden border-b border-mist bg-page-bg p-6">
+              <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden border-b border-mist bg-page-bg">
                 <img
                   src={imageSrc}
                   alt={`Contoh produk ${itemTitle}`}
                   loading="lazy"
-                  width={240}
-                  height={180}
-                  className="h-full w-full object-contain"
+                  width={400}
+                  height={300}
+                  className={`h-full w-full ${imageSrc.endsWith(".svg") ? "object-contain p-6" : "object-cover"} transition-transform duration-300 hover:scale-105`}
                 />
               </div>
 
