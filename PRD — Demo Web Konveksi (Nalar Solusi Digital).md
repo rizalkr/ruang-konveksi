@@ -22,7 +22,7 @@ Dari data leads, konveksi adalah sektor dengan prospek terbanyak di Tier 1 (18 d
 **Tujuan bisnis:** mendapat balasan dan minat dari pemilik konveksi pada batch uji pertama.
 
 | Metrik | Target (usulan, tinjau ulang setelah batch 1) |
-| --- | --- |
+|---|---|
 | Waktu personalisasi satu prospek | di bawah 30 menit |
 | Skor performa mobile (Lighthouse) | 90 ke atas |
 | Demo terbuka normal di HP Android kelas menengah | ya |
@@ -53,7 +53,7 @@ Dari data leads, konveksi adalah sektor dengan prospek terbanyak di Tier 1 (18 d
 ## 6. Kebutuhan fungsional
 
 | ID | Kebutuhan | Kriteria selesai |
-| --- | --- | --- |
+|---|---|---|
 | FR-1 | Halaman demo dibangun dari file konfigurasi berdasarkan slug | Slug tidak dikenal menampilkan halaman 404 |
 | FR-2 | Hero berisi nama bisnis, tagline, dan tombol WA | Tombol membuka chat WA ke nomor di konfigurasi |
 | FR-3 | Katalog per kategori (PDH, kaos, jaket, almamater, wearpack, jersey, seragam sekolah; bisa dikurangi atau ditambah per bisnis) | Tiap kategori menampilkan foto, deskripsi, harga mulai |
@@ -136,7 +136,18 @@ type BusinessConfig = {
 
 ## 11. Arsitektur dan stack
 
-Next.js (App Router), TypeScript, Tailwind CSS, Lucide React. Deploy ke Vercel; Docker dipakai untuk pengembangan lokal. Project baru dan terpisah dari Rental Profile Lite.
+Next.js (App Router), TypeScript, Tailwind CSS, Lucide React. Deploy ke Vercel; pengembangan lokal cukup lewat npm run dev, tanpa Docker. Project baru dan terpisah dari Rental Profile Lite.
+
+| Item | Keputusan |
+|---|---|
+| Package manager | npm |
+| Runtime | Node.js 22 |
+| Framework | Next.js 15 atau lebih baru (App Router), halaman statis, deploy ke Vercel |
+| Styling | Tailwind CSS 3.4, tanpa plugin tambahan |
+| Ikon | Lucide React |
+| Font | Plus Jakarta Sans lewat next/font/google |
+| Pengujian | Vitest (devDependency), hanya untuk estimasi.ts dan whatsapp.ts |
+| Pengembangan lokal | npm run dev, tanpa Docker |
 
 ```
 src/
@@ -158,7 +169,7 @@ src/
 Setiap tahap selesai lalu menunggu konfirmasi sebelum lanjut.
 
 | Tahap | Isi | Selesai jika |
-| --- | --- | --- |
+|---|---|---|
 | 1 | Scaffold, tipe konfigurasi, data demo generik, rute `/demo/[slug]`, hero dan layout dasar | Halaman terbuka dari konfigurasi |
 | 2 | Katalog per kategori dan info produksi | Semua kategori tampil rapi di HP |
 | 3 | Kalkulator dan form order ke WA | Pesan WA terisi benar untuk semua kombinasi input |
@@ -174,7 +185,7 @@ Setiap tahap selesai lalu menunggu konfirmasi sebelum lanjut.
 ## 15. Risiko dan mitigasi
 
 | Risiko | Mitigasi |
-| --- | --- |
+|---|---|
 | Pemilik merasa demo bukan untuk bisnisnya | Personalisasi nama, logo, WA, dan produk lewat konfigurasi sebelum dikirim |
 | Estimasi dianggap harga resmi | Label "estimasi" dan angka contoh yang jelas |
 | Foto bisnis kurang atau tidak ada | Minta foto dulu atau pakai tata letak yang tidak bergantung pada foto |
@@ -230,7 +241,7 @@ Tugas pertama agen adalah menulis rencana implementasi, bukan kode. Kode baru di
 Semua angka di bawah adalah contoh untuk demo, bukan harga pasar atau harga bisnis tertentu. Nama bisnis dan nomor WA adalah placeholder.
 
 | Item | Nilai contoh |
-| --- | --- |
+|---|---|
 | Nama bisnis | Nama Konveksi Contoh |
 | Nomor WA | 62800000000 |
 | Kategori dan harga mulai per pcs (Rp) | PDH 120.000; Kaos 55.000; Jaket 135.000; Almamater 150.000; Wearpack 140.000; Jersey 90.000; Seragam sekolah 85.000 |
