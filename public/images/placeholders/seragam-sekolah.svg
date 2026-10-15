@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%" fill="none">
+  <rect width="240" height="240" rx="16" fill="#F8FAFC"/>
+  <!-- School Uniform Shirt Body -->
+  <path d="M74 54 L166 54 L196 90 L170 108 L152 86 L152 196 L88 196 L88 86 L70 108 L44 90 Z" 
+        fill="#FFFFFF" stroke="#334155" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Front Button Placket -->
+  <line x1="120" y1="68" x2="120" y2="196" stroke="#334155" stroke-width="2"/>
+  <circle cx="120" cy="90" r="2" fill="#334155"/>
+  <circle cx="120" cy="116" r="2" fill="#334155"/>
+  <circle cx="120" cy="142" r="2" fill="#334155"/>
+  <circle cx="120" cy="168" r="2" fill="#334155"/>
+  <!-- Left Chest Pocket with School OSIS Shield Badge -->
+  <rect x="94" y="106" width="18" height="22" rx="2" fill="#F8FAFC" stroke="#334155" stroke-width="1.5"/>
+  <!-- Shield Badge Outline -->
+  <path d="M99 110 L107 110 L107 118 C107 122 103 125 103 125 C103 125 99 122 99 118 Z" 
+        fill="#CBD5E1" stroke="#334155" stroke-width="1.2"/>
+  <line x1="99" y1="114" x2="107" y2="114" stroke="#64748B" stroke-width="1"/>
+  <!-- Pointed Clean Collar -->
+  <path d="M120 70 L94 48 L112 44 L120 60 L128 44 L146 48 Z" 
+        fill="#F1F5F9" stroke="#334155" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Sleeve Stitch Line -->
+  <line x1="48" y1="102" x2="68" y2="112" stroke="#94A3B8" stroke-width="1.5"/>
+  <line x1="172" y1="112" x2="192" y2="102" stroke="#94A3B8" stroke-width="1.5"/>
+</svg>

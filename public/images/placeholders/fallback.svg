@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%" fill="none">
+  <rect width="240" height="240" rx="16" fill="#F8FAFC"/>
+  <!-- Hanger Hook -->
+  <path d="M120 74 C112 74 108 68 108 60 C108 50 120 44 126 52 C130 58 126 68 120 74 L120 86" 
+        stroke="#475569" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Hanger Frame -->
+  <path d="M54 116 L120 86 L186 116 C188 117 186 122 182 122 L58 122 C54 122 52 117 54 116 Z" 
+        fill="#CBD5E1" stroke="#334155" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Garment Silhouette Hanging -->
+  <path d="M68 122 L172 122 L164 190 L76 190 Z" 
+        fill="#E2E8F0" stroke="#334155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Clean Garment Creases -->
+  <line x1="100" y1="126" x2="98" y2="186" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <line x1="140" y1="126" x2="142" y2="186" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4 3"/>
+</svg>

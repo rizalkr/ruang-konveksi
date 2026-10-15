@@ -182,11 +182,11 @@ async function main() {
         const hasHorizontalScroll = scrollWidth > clientWidth;
 
         // Inspect hero buttons
-        const buttons = Array.from(document.querySelectorAll('section a')).map(a => {
+        const heroButtons = Array.from(document.querySelectorAll('section:first-of-type a')).map(a => {
           const rect = a.getBoundingClientRect();
           const style = window.getComputedStyle(a);
           return {
-            text: a.innerText.trim().replace(/\\s+/g, ' '),
+            text: (a.textContent || a.innerText || '').trim().replace(/\\s+/g, ' '),
             href: a.getAttribute('href'),
             fontSize: style.fontSize,
             fontWeight: style.fontWeight,
@@ -196,12 +196,84 @@ async function main() {
             height: Math.round(rect.height * 100) / 100,
             left: Math.round(rect.left * 100) / 100,
             right: Math.round(rect.right * 100) / 100,
-            top: Math.round(rect.top * 100) / 100,
-            bottom: Math.round(rect.bottom * 100) / 100,
             touchTargetAdequate: rect.width >= 44 && rect.height >= 44,
             withinViewport: rect.left >= 0 && rect.right <= clientWidth
           };
         });
+
+        // Inspect catalog CTA buttons (strict >= 48px touch target)
+        const catalogButtons = Array.from(document.querySelectorAll('#katalog article a')).map(a => {
+          const rect = a.getBoundingClientRect();
+          return {
+            text: (a.textContent || a.innerText || '').trim().replace(/\\s+/g, ' '),
+            href: a.getAttribute('href'),
+            width: Math.round(rect.width * 100) / 100,
+            height: Math.round(rect.height * 100) / 100,
+            left: Math.round(rect.left * 100) / 100,
+            right: Math.round(rect.right * 100) / 100,
+            touchTarget48Adequate: rect.height >= 48 && rect.width >= 48,
+            withinViewport: rect.left >= 0 && rect.right <= clientWidth
+          };
+        });
+
+        // Inspect catalog images
+        const catalogImages = Array.from(document.querySelectorAll('#katalog article img')).map(img => {
+          const rect = img.getBoundingClientRect();
+          return {
+            src: img.getAttribute('src'),
+            alt: img.getAttribute('alt'),
+            width: Math.round(rect.width * 100) / 100,
+            height: Math.round(rect.height * 100) / 100,
+            complete: img.complete,
+            naturalWidth: img.naturalWidth,
+            naturalHeight: img.naturalHeight,
+            withinViewport: rect.left >= 0 && rect.right <= clientWidth
+          };
+        });
+
+        const catalogDisclaimerFound = Boolean(
+          (document.querySelector('#katalog')?.textContent || '').includes('Harga pada demo ini hanya contoh. Harga final dikonfirmasi melalui WhatsApp.')
+        );
+
+        const moqTextFound = Boolean(
+          (document.querySelector('#spesifikasi-produksi')?.textContent || '').includes('12 pcs')
+        );
+
+        const workflowStepsCount = document.querySelectorAll('#spesifikasi-produksi ol li').length;
+
+        // Inspect Phase 3 Kalkulator and FormOrder elements
+        const kalkulatorDisclaimerFound = Boolean(
+          (document.querySelector('#kalkulator')?.textContent || '').includes('Estimasi, harga final dikonfirmasi via WhatsApp.')
+        );
+
+        const quickQuantityButtons = Array.from(document.querySelectorAll('#kalkulator button')).map(btn => {
+          const rect = btn.getBoundingClientRect();
+          return {
+            text: (btn.textContent || '').trim().replace(/\s+/g, ' '),
+            width: Math.round(rect.width * 100) / 100,
+            height: Math.round(rect.height * 100) / 100,
+            left: Math.round(rect.left * 100) / 100,
+            right: Math.round(rect.right * 100) / 100,
+            touchTarget44Adequate: rect.height >= 44 && rect.width >= 44,
+            withinViewport: rect.left >= 0 && rect.right <= clientWidth
+          };
+        });
+
+        const orderWaButton = document.querySelector('#kalkulator form a');
+        let orderWaButtonInfo = null;
+        if (orderWaButton) {
+          const rect = orderWaButton.getBoundingClientRect();
+          const style = window.getComputedStyle(orderWaButton);
+          orderWaButtonInfo = {
+            text: (orderWaButton.textContent || '').trim().replace(/\s+/g, ' '),
+            href: orderWaButton.getAttribute('href'),
+            width: Math.round(rect.width * 100) / 100,
+            height: Math.round(rect.height * 100) / 100,
+            fontSize: style.fontSize,
+            touchTarget48Adequate: rect.height >= 48 && rect.width >= 48,
+            withinViewport: rect.left >= 0 && rect.right <= clientWidth
+          };
+        }
 
         // Search for any element overflowing viewport width
         const overflowingElements = [];
@@ -225,7 +297,15 @@ async function main() {
           overflowPixels: Math.max(0, scrollWidth - clientWidth),
           overflowingElementsCount: overflowingElements.length,
           overflowingElements,
-          buttons
+          heroButtons,
+          catalogButtons,
+          catalogImages,
+          catalogDisclaimerFound,
+          moqTextFound,
+          workflowStepsCount,
+          kalkulatorDisclaimerFound,
+          quickQuantityButtons,
+          orderWaButtonInfo
         };
       })()`,
     });
@@ -255,13 +335,14 @@ async function main() {
       );
     }
 
-    if (!inspection.buttons || inspection.buttons.length < 2) {
+    // Hero buttons assertions
+    if (!inspection.heroButtons || inspection.heroButtons.length < 2) {
       throw new Error(
-        `Expected at least 2 Hero buttons, found: ${inspection.buttons?.length ?? 0}`,
+        `Expected at least 2 Hero buttons, found: ${inspection.heroButtons?.length ?? 0}`,
       );
     }
 
-    for (const btn of inspection.buttons) {
+    for (const btn of inspection.heroButtons) {
       if (!btn.withinViewport) {
         throw new Error(
           `Hero button "${btn.text}" is outside viewport boundaries (left: ${btn.left}, right: ${btn.right}, clientWidth: ${inspection.clientWidth})`,
@@ -278,6 +359,115 @@ async function main() {
           `Hero button "${btn.text}" font size ${btn.fontSize} is less than 18.67px (WCAG Large Text threshold)`,
         );
       }
+    }
+
+    // Catalog CTA buttons assertions (Strict Note 5: >= 48px height)
+    if (!inspection.catalogButtons || inspection.catalogButtons.length !== 7) {
+      throw new Error(
+        `Expected exactly 7 catalog CTA buttons, found: ${inspection.catalogButtons?.length ?? 0}`,
+      );
+    }
+
+    for (const btn of inspection.catalogButtons) {
+      if (!btn.withinViewport) {
+        throw new Error(
+          `Catalog CTA button "${btn.text}" is outside viewport boundaries (left: ${btn.left}, right: ${btn.right})`,
+        );
+      }
+      if (!btn.touchTarget48Adequate) {
+        throw new Error(
+          `Catalog CTA button "${btn.text}" touch target failed 48px requirement (width: ${btn.width}px, height: ${btn.height}px, minimum 48px required)`,
+        );
+      }
+      if (btn.text !== "Hitung Estimasi") {
+        throw new Error(
+          `Catalog CTA button text expected "Hitung Estimasi", received: "${btn.text}"`,
+        );
+      }
+      if (btn.href !== "#kalkulator") {
+        throw new Error(
+          `Catalog CTA button href expected "#kalkulator", received: "${btn.href}"`,
+        );
+      }
+    }
+
+    // Catalog images assertions
+    if (!inspection.catalogImages || inspection.catalogImages.length !== 7) {
+      throw new Error(
+        `Expected 7 catalog images, found: ${inspection.catalogImages?.length ?? 0}`,
+      );
+    }
+
+    for (const img of inspection.catalogImages) {
+      if (!img.withinViewport) {
+        throw new Error(`Catalog image "${img.src}" spills outside viewport boundaries`);
+      }
+      if (!img.complete || img.naturalWidth === 0) {
+        throw new Error(`Catalog image "${img.src}" failed to render or load properly`);
+      }
+    }
+
+    // Disclaimer and production specifications assertions
+    if (!inspection.catalogDisclaimerFound) {
+      throw new Error("Catalog pricing disclaimer notice was not found in page content");
+    }
+
+    if (!inspection.moqTextFound) {
+      throw new Error("Production specifications MOQ 12 pcs was not found in page content");
+    }
+
+    if (inspection.workflowStepsCount !== 4) {
+      throw new Error(
+        `Expected 4 workflow steps in demo page, found: ${inspection.workflowStepsCount}`,
+      );
+    }
+
+    // Phase 3 Kalkulator and FormOrder assertions
+    if (!inspection.kalkulatorDisclaimerFound) {
+      throw new Error(
+        "Kalkulator pricing disclaimer notice was not found in page content",
+      );
+    }
+
+    if (!inspection.quickQuantityButtons || inspection.quickQuantityButtons.length !== 4) {
+      throw new Error(
+        `Expected 4 quick quantity buttons, found: ${inspection.quickQuantityButtons?.length ?? 0}`,
+      );
+    }
+
+    for (const btn of inspection.quickQuantityButtons) {
+      if (!btn.withinViewport) {
+        throw new Error(
+          `Quick quantity button "${btn.text}" is outside viewport boundaries`,
+        );
+      }
+      if (!btn.touchTarget44Adequate) {
+        throw new Error(
+          `Quick quantity button "${btn.text}" touch target failed 44px requirement (width: ${btn.width}px, height: ${btn.height}px, minimum 44px required)`,
+        );
+      }
+    }
+
+    if (!inspection.orderWaButtonInfo) {
+      throw new Error("FormOrder WhatsApp submit button was not found");
+    }
+
+    if (!inspection.orderWaButtonInfo.touchTarget48Adequate) {
+      throw new Error(
+        `FormOrder WhatsApp button touch target inadequate (width: ${inspection.orderWaButtonInfo.width}px, height: ${inspection.orderWaButtonInfo.height}px, minimum 48px required)`,
+      );
+    }
+
+    if (!inspection.orderWaButtonInfo.withinViewport) {
+      throw new Error(
+        "FormOrder WhatsApp button is outside viewport boundaries",
+      );
+    }
+
+    if (!inspection.orderWaButtonInfo.href?.startsWith("https://wa.me/")) {
+      throw new Error(
+        `FormOrder WhatsApp button href does not start with https://wa.me/, received: "${inspection.orderWaButtonInfo.href}"`,
+      );
     }
 
     // Capture screenshot

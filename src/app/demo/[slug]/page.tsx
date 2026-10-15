@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllBusinessSlugs, getBusinessConfig } from "@/config";
 import { Hero } from "@/components/Hero";
+import { KatalogKategori } from "@/components/KatalogKategori";
+import { ProsesMOQ } from "@/components/ProsesMOQ";
 import { PemesananContainer } from "@/components/PemesananContainer";
 import { getAccessibleTextColor } from "@/lib/color";
 
@@ -61,8 +63,10 @@ export default async function DemoPage({ params }: DemoPageProps) {
       }
       className="min-h-screen bg-neutral-50 text-neutral-900"
     >
-      <main>
+      <main className="space-y-16 pb-16">
         <Hero config={config} />
+        <KatalogKategori kategori={config.kategori} />
+        <ProsesMOQ produksi={config.produksi} moq={config.kalkulator.moq} />
         <PemesananContainer config={config} />
       </main>
     </div>
