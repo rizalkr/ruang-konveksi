@@ -242,8 +242,8 @@ Semua angka di bawah adalah contoh untuk demo, bukan harga pasar atau harga bisn
 
 | Item | Nilai contoh |
 |---|---|
-| Nama bisnis | RUmah Konveksi |
-| Nomor WA | 6285191294341 |
+| Nama bisnis | Rumah Konveksi |
+| Nomor WA | 6281529964902 |
 | Kategori dan harga mulai per pcs (Rp) | PDH 120.000; Kaos 55.000; Jaket 135.000; Almamater 150.000; Wearpack 140.000; Jersey 90.000; Seragam sekolah 85.000 |
 | Tambahan bahan per pcs (Rp) | Katun 0; Katun combed 10.000; Drill 15.000; Dry-fit 12.000 |
 | Tambahan branding per pcs (Rp) | Tanpa 0; Sablon 10.000; Bordir 20.000 |

@@ -2,10 +2,10 @@ import type { BusinessConfig } from "./types";
 
 export const demoGenerikConfig: BusinessConfig = {
   slug: "demo-generik",
-  nama: "Nama Konveksi Contoh",
+  nama: "Rumah Konveksi",
   tagline: "Konveksi Seragam, Kaos, Jaket, dan Busana Berkualitas di Solo Raya",
   warnaUtama: "#1e3a8a",
-  wa: "62800000000",
+  wa: "6281529964902",
   alamat: "[Contoh] Alamat workshop konveksi di Solo Raya / Sukoharjo (diisi saat personalisasi prospek)",
   jamOperasional: "Senin - Sabtu: 08.00 - 17.00 WIB",
   kategori: [
@@ -91,7 +91,25 @@ export const demoGenerikConfig: BusinessConfig = {
       "Pengambilan atau pengiriman",
     ],
   },
-  galeri: [],
-  ulasan: [],
+  galeri: [
+    "/images/placeholders/pdh.svg",
+    "/images/placeholders/kaos.svg",
+    "/images/placeholders/jaket.svg",
+    "/images/placeholders/jersey.svg",
+  ],
+  ulasan: [
+    {
+      nama: "Budi Santoso",
+      teks: "Pesan 50 pcs kaos untuk acara komunitas, jahitan rapi dan selesai tepat waktu sebelum hari H.",
+    },
+    {
+      nama: "Siti Rahmawati",
+      teks: "Kemeja PDH kantor hasilnya sangat memuaskan, bordir logo rapi dan bahannya adem.",
+    },
+    {
+      nama: "Agus Pratama",
+      teks: "Pelayanan ramah dan responsif lewat WhatsApp. Estimasi harga di awal sangat membantu perencanaan anggaran.",
+    },
+  ],
 };
 

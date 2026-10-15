@@ -8,7 +8,7 @@ import { calculateContrastRatio, getAccessibleTextColor, getRelativeLuminance } 
 describe("Hero Component", () => {
   it("renders business name and tagline correctly", () => {
     const html = renderToString(<Hero config={demoGenerikConfig} />);
-    expect(html).toContain("Nama Konveksi Contoh");
+    expect(html).toContain("Rumah Konveksi");
     expect(html).toContain("Konveksi Seragam, Kaos, Jaket, dan Busana Berkualitas di Solo Raya");
   });
 
@@ -37,7 +37,7 @@ describe("Hero Component", () => {
     // Link attributes
     expect(html).toContain('target="_blank"');
     expect(html).toContain('rel="noopener noreferrer"');
-    expect(html).toContain("wa.me/62800000000");
+    expect(html).toContain("wa.me/6281529964902");
 
     // Focus indicator accessibility
     expect(html).toContain("focus-visible:outline-neutral-900");
@@ -74,7 +74,7 @@ describe("Hero Component", () => {
     const withLogo = renderToString(<Hero config={withLogoConfig} />);
     expect(withLogo).toContain("<img");
     expect(withLogo).toContain('src="/images/custom-logo.png"');
-    expect(withLogo).toContain('alt="Logo Nama Konveksi Contoh"');
+    expect(withLogo).toContain('alt="Logo Rumah Konveksi"');
   });
 
   it("adapts text color for light brand colors to preserve contrast >= 3.0:1", () => {

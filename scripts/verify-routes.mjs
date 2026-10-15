@@ -34,8 +34,8 @@ async function main() {
     const demoRes = await fetch(`http://127.0.0.1:${PORT}/demo/demo-generik`);
     console.log("Demo route status:", demoRes.status);
     const demoHtml = await demoRes.text();
-    const hasBrandTitle = demoHtml.includes("Nama Konveksi Contoh");
-    const hasWaUrl = demoHtml.includes("wa.me/62800000000");
+    const hasBrandTitle = demoHtml.includes("Rumah Konveksi");
+    const hasWaUrl = demoHtml.includes("wa.me/6281529964902");
     const hasCalculatorAnchor = demoHtml.includes('href="#kalkulator"');
     console.log("Demo content checks:", { hasBrandTitle, hasWaUrl, hasCalculatorAnchor });
     if (!hasBrandTitle || !hasWaUrl || !hasCalculatorAnchor || demoRes.status !== 200) {

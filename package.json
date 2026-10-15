@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
-    "verify:viewport": "node scripts/verify-viewport.mjs"
+    "verify:viewport": "node scripts/verify-viewport.mjs",
+    "audit:perf": "node scripts/measure-performance.mjs"
   },
   "dependencies": {
     "next": "^15.1.0",

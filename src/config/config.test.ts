@@ -23,7 +23,7 @@ describe("Business configurations and sample data integrity", () => {
   it("retrieves demo-generik successfully from getBusinessConfig", () => {
     const config = getBusinessConfig("demo-generik");
     expect(config).toBeDefined();
-    expect(config?.nama).toBe("Nama Konveksi Contoh");
+    expect(config?.nama).toBe("Rumah Konveksi");
   });
 
   it("returns undefined for unknown slugs", () => {

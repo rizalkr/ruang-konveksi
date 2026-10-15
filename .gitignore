@@ -30,5 +30,6 @@ next-env.d.ts
 
 # local test artifacts
 .chrome-user-data
+.chrome-perf-user-data
 
 
