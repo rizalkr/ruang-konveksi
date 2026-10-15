@@ -40,6 +40,11 @@ export async function generateMetadata({
   return {
     title: `${config.nama} - Profil & Estimasi Konveksi`,
     description: config.tagline,
+    icons: config.logo
+      ? {
+          icon: config.logo,
+        }
+      : undefined,
     robots: {
       index: false,
       follow: false,

@@ -167,8 +167,16 @@ async function main() {
     console.log("Navigating to:", TARGET_URL);
     await sendCommand("Page.navigate", { url: TARGET_URL });
 
-    // Wait for load and rendering
-    await wait(2000);
+    // Wait for initial load, then scroll through document to trigger lazy-loaded images
+    await wait(1000);
+    await sendCommand("Runtime.evaluate", {
+      expression: "window.scrollTo(0, document.body.scrollHeight);",
+    });
+    await wait(1000);
+    await sendCommand("Runtime.evaluate", {
+      expression: "window.scrollTo(0, 0);",
+    });
+    await wait(1000);
 
     // Evaluate layout and inspect elements
     const evalResult = await sendCommand("Runtime.evaluate", {

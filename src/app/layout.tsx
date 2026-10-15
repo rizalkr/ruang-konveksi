@@ -11,6 +11,9 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Ruang Konveksi",
   description: "Platform demo profil konveksi dan estimasi pemesanan busana custom.",
+  icons: {
+    icon: "/pp-nalar.jpeg",
+  },
   robots: {
     index: false,
     follow: false,

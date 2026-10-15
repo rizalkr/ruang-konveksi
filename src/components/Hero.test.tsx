@@ -64,16 +64,14 @@ describe("Hero Component", () => {
   });
 
   it("renders logo when present, and omits logo container when undefined", () => {
-    const withoutLogo = renderToString(<Hero config={demoGenerikConfig} />);
+    const withoutLogo = renderToString(
+      <Hero config={{ ...demoGenerikConfig, logo: undefined }} />
+    );
     expect(withoutLogo).not.toContain("<img");
 
-    const withLogoConfig = {
-      ...demoGenerikConfig,
-      logo: "/images/custom-logo.png",
-    };
-    const withLogo = renderToString(<Hero config={withLogoConfig} />);
+    const withLogo = renderToString(<Hero config={demoGenerikConfig} />);
     expect(withLogo).toContain("<img");
-    expect(withLogo).toContain('src="/images/custom-logo.png"');
+    expect(withLogo).toContain('src="/pp-nalar.jpeg"');
     expect(withLogo).toContain('alt="Logo Rumah Konveksi"');
   });
 

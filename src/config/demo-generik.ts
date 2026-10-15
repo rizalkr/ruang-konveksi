@@ -4,6 +4,7 @@ export const demoGenerikConfig: BusinessConfig = {
   slug: "demo-generik",
   nama: "Rumah Konveksi",
   tagline: "Konveksi Seragam, Kaos, Jaket, dan Busana Berkualitas di Solo Raya",
+  logo: "/pp-nalar.jpeg",
   warnaUtama: "#1e3a8a",
   wa: "6281529964902",
   alamat: "[Contoh] Alamat workshop konveksi di Solo Raya / Sukoharjo (diisi saat personalisasi prospek)",

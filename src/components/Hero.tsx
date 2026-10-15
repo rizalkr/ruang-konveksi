@@ -19,7 +19,7 @@ export function Hero({ config }: HeroProps) {
             <img
               src={config.logo}
               alt={`Logo ${config.nama}`}
-              className="h-16 w-auto object-contain sm:h-20"
+              className="h-16 w-auto object-contain sm:h-20 rounded-2xl shadow-sm border border-neutral-100"
             />
           </div>
         )}
