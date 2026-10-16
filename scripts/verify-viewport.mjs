@@ -1,6 +1,5 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs";
-import http from "node:http";
 import path from "node:path";
 
 function findChromeBinary() {
@@ -798,6 +797,103 @@ async function main() {
 
     console.log("Multi-state mobile occlusion tests passed: floating CTA conceals when order submit button is in view and restores in testimonials section.");
 
+    // Option A Verification: Mobile Navbar slide-down drawer with solid white background
+    console.log("Testing Option A Mobile Navbar slide-down drawer...");
+    await sendCommand("Runtime.evaluate", {
+      expression: `window.scrollTo({ top: 0, behavior: 'instant' });`,
+    });
+    await wait(200);
+
+    const toggleOpenResult = await sendCommand("Runtime.evaluate", {
+      returnByValue: true,
+      expression: `(() => {
+        const toggleBtn = document.querySelector('header#beranda button[aria-controls="mobile-nav-menu"]');
+        if (!toggleBtn) return { error: 'Mobile menu toggle button not found' };
+        toggleBtn.click();
+        return { clicked: true };
+      })()`,
+    });
+    if (toggleOpenResult.result.value?.error) {
+      throw new Error(toggleOpenResult.result.value.error);
+    }
+    // Wait for 300ms transition
+    await wait(350);
+
+    const menuOpenCheck = await sendCommand("Runtime.evaluate", {
+      returnByValue: true,
+      expression: `(() => {
+        const menu = document.getElementById('mobile-nav-menu');
+        const header = document.getElementById('beranda');
+        const backdrop = document.querySelector('div[aria-hidden="true"].bg-ink\\\\/40');
+        if (!menu) return { error: 'mobile-nav-menu not found' };
+        const menuRect = menu.getBoundingClientRect();
+        const menuStyle = window.getComputedStyle(menu);
+        const headerStyle = window.getComputedStyle(header);
+        const links = Array.from(menu.querySelectorAll('a')).map(a => ({
+          text: a.textContent.trim(),
+          visible: a.offsetParent !== null
+        }));
+
+        return {
+          isOpen: menuRect.height > 200,
+          height: menuRect.height,
+          backgroundColor: menuStyle.backgroundColor,
+          headerBackgroundColor: headerStyle.backgroundColor,
+          opacity: menuStyle.opacity,
+          linksCount: links.length,
+          linksVisible: links.every(l => l.visible),
+          backdropVisible: backdrop ? window.getComputedStyle(backdrop).opacity === '1' : false
+        };
+      })()`,
+    });
+
+    if (!menuOpenCheck.result.value?.isOpen) {
+      throw new Error(`Mobile drawer failed to expand: height was ${menuOpenCheck.result.value?.height}`);
+    }
+    if (menuOpenCheck.result.value?.backgroundColor !== 'rgb(255, 255, 255)') {
+      throw new Error(`Mobile drawer background is not solid white: got ${menuOpenCheck.result.value?.backgroundColor}`);
+    }
+    if (!menuOpenCheck.result.value?.linksVisible || menuOpenCheck.result.value?.linksCount < 5) {
+      throw new Error(`Mobile drawer links not properly visible: ${JSON.stringify(menuOpenCheck.result.value)}`);
+    }
+    console.log("Option A Mobile Navbar drawer open verified: solid white background, height > 200px, links visible.");
+
+    // Capture screenshot of open drawer
+    const drawerScreenshotPath = path.join(process.cwd(), "public", "mobile-navbar-drawer-open.png");
+    const drawerScreenshotData = await sendCommand("Page.captureScreenshot", {
+      format: "png",
+      captureBeyondViewport: false,
+    });
+    if (drawerScreenshotData?.data) {
+      fs.writeFileSync(drawerScreenshotPath, Buffer.from(drawerScreenshotData.data, "base64"));
+      console.log("Mobile drawer open screenshot saved to:", drawerScreenshotPath);
+    }
+
+    // Now close the mobile drawer
+    await sendCommand("Runtime.evaluate", {
+      expression: `(() => {
+        const toggleBtn = document.querySelector('header#beranda button[aria-controls="mobile-nav-menu"]');
+        if (toggleBtn) toggleBtn.click();
+      })()`,
+    });
+    await wait(350);
+
+    const menuClosedCheck = await sendCommand("Runtime.evaluate", {
+      returnByValue: true,
+      expression: `(() => {
+        const menu = document.getElementById('mobile-nav-menu');
+        if (!menu) return { error: 'mobile-nav-menu not found' };
+        const rect = menu.getBoundingClientRect();
+        return {
+          isClosed: rect.height === 0 || window.getComputedStyle(menu).opacity === '0'
+        };
+      })()`,
+    });
+    if (!menuClosedCheck.result.value?.isClosed) {
+      throw new Error("Mobile drawer failed to collapse smoothly on close");
+    }
+    console.log("Option A Mobile Navbar drawer closed cleanly.");
+
     // Phase 5 Integration: Verify Catalog ImageGalleryModal opening & closing
     console.log("Testing shared ImageGalleryModal from Catalog card...");
     const catalogModalOpenResult = await sendCommand("Runtime.evaluate", {
@@ -817,7 +913,7 @@ async function main() {
     const catalogModalInspection = await sendCommand("Runtime.evaluate", {
       returnByValue: true,
       expression: `(() => {
-        const dialog = document.querySelector('[role="dialog"]');
+        const dialog = document.getElementById('image-gallery-modal');
         if (!dialog) return { found: false };
         const rect = dialog.getBoundingClientRect();
         const bodyOverflow = document.body.style.overflow;
@@ -851,7 +947,7 @@ async function main() {
     // Click CTA button inside modal to test integration and automatic scrolling to calculator
     await sendCommand("Runtime.evaluate", {
       expression: `(() => {
-        const dialog = document.querySelector('[role="dialog"]');
+        const dialog = document.getElementById('image-gallery-modal');
         const ctaBtn = dialog?.querySelector('button.bg-brand-primary');
         if (ctaBtn) ctaBtn.click();
       })()`,
@@ -861,7 +957,7 @@ async function main() {
     const postCtaCheck = await sendCommand("Runtime.evaluate", {
       returnByValue: true,
       expression: `(() => {
-        const dialog = document.querySelector('[role="dialog"]');
+        const dialog = document.getElementById('image-gallery-modal');
         const currentProduct = document.getElementById('kalkulator-produk')?.value;
         const kalkulatorRect = document.getElementById('kalkulator')?.getBoundingClientRect();
         return {
@@ -914,6 +1010,36 @@ async function main() {
     }
     console.log("Catalog to Calculator integration passed: clicking 'Hitung Estimasi' automatically selects 'Jaket' and updates price estimate.");
 
+    // Verify user can freely switch product dropdown after catalog auto-selection
+    console.log("Testing user ability to change product dropdown after catalog auto-selection...");
+    await sendCommand("Runtime.evaluate", {
+      expression: `(() => {
+        const selectEl = document.getElementById('kalkulator-produk');
+        if (selectEl) {
+          selectEl.value = 'Kaos';
+          selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      })()`,
+    });
+    await wait(300);
+
+    const postChangeCheck = await sendCommand("Runtime.evaluate", {
+      returnByValue: true,
+      expression: `(() => {
+        const selectEl = document.getElementById('kalkulator-produk');
+        if (!selectEl) return { error: 'Calculator product select not found' };
+        return {
+          finalValue: selectEl.value,
+          isRetained: selectEl.value === 'Kaos'
+        };
+      })()`,
+    });
+
+    if (!postChangeCheck.result.value?.isRetained) {
+      throw new Error(`Calculator product dropdown locked: expected 'Kaos' to persist, but found '${postChangeCheck.result.value?.finalValue}'`);
+    }
+    console.log("Calculator product dropdown change passed: user can freely switch products after catalog selection.");
+
     // Phase 5 Integration: Verify Galeri opens shared modal and supports image navigation
     console.log("Testing Galeri shared ImageGalleryModal and navigation controls...");
     await sendCommand("Runtime.evaluate", {
@@ -932,7 +1058,7 @@ async function main() {
     const galleryModalOpenCheck = await sendCommand("Runtime.evaluate", {
       returnByValue: true,
       expression: `(() => {
-        const dialog = document.querySelector('[role="dialog"]');
+        const dialog = document.getElementById('image-gallery-modal');
         if (!dialog) return { found: false };
         const counterText = (dialog.querySelector('[aria-live="polite"]')?.textContent || '').trim();
         const nextBtn = dialog.querySelector('[aria-label="Gambar berikutnya"]');
@@ -968,7 +1094,7 @@ async function main() {
     const galleryModalNextCheck = await sendCommand("Runtime.evaluate", {
       returnByValue: true,
       expression: `(() => {
-        const dialog = document.querySelector('[role="dialog"]');
+        const dialog = document.getElementById('image-gallery-modal');
         const counterText = (dialog?.querySelector('[aria-live="polite"]')?.textContent || '').trim();
         return { counterText };
       })()`,

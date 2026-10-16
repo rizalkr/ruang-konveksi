@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import type { BusinessConfig } from "@/config/types";
 import { formatRentangEstimasi, hitungEstimasi } from "@/lib/estimasi";
 import { usePemesanan } from "@/context/PemesananContext";
@@ -20,9 +20,18 @@ interface PemesananContainerProps {
  */
 export function PemesananContainer({ config }: PemesananContainerProps) {
   const kalkulatorConfig = config?.kalkulator;
-  const produkKeys = Object.keys(kalkulatorConfig?.produk ?? {});
-  const bahanKeys = Object.keys(kalkulatorConfig?.bahan ?? {});
-  const brandingKeys = Object.keys(kalkulatorConfig?.branding ?? {});
+  const produkKeys = useMemo(
+    () => Object.keys(kalkulatorConfig?.produk ?? {}),
+    [kalkulatorConfig?.produk]
+  );
+  const bahanKeys = useMemo(
+    () => Object.keys(kalkulatorConfig?.bahan ?? {}),
+    [kalkulatorConfig?.bahan]
+  );
+  const brandingKeys = useMemo(
+    () => Object.keys(kalkulatorConfig?.branding ?? {}),
+    [kalkulatorConfig?.branding]
+  );
   const initialMoq =
     typeof kalkulatorConfig?.moq === "number" && kalkulatorConfig.moq > 0
       ? kalkulatorConfig.moq
@@ -42,25 +51,29 @@ export function PemesananContainer({ config }: PemesananContainerProps) {
 
   // Sync state when a product is selected from Katalog or Modal
   const { targetSelection } = usePemesanan();
+  const lastProcessedTimestamp = useRef<number>(0);
 
   useEffect(() => {
-    if (targetSelection?.produk) {
+    if (
+      targetSelection?.produk &&
+      targetSelection.timestamp > lastProcessedTimestamp.current
+    ) {
+      lastProcessedTimestamp.current = targetSelection.timestamp;
+
       if (kalkulatorConfig?.produk && targetSelection.produk in kalkulatorConfig.produk) {
         setProduk(targetSelection.produk);
 
         // Retain existing bahan, branding, and jumlah if valid; otherwise fallback gracefully
-        if (bahanKeys.length > 0 && !bahanKeys.includes(bahan)) {
-          setBahan(bahanKeys[0]);
-        }
-        if (brandingKeys.length > 0 && !brandingKeys.includes(branding)) {
-          setBranding(brandingKeys[0]);
-        }
-        if (jumlah < initialMoq) {
-          setJumlah(initialMoq);
-        }
+        setBahan((prevBahan) =>
+          bahanKeys.length > 0 && !bahanKeys.includes(prevBahan) ? bahanKeys[0] : prevBahan
+        );
+        setBranding((prevBranding) =>
+          brandingKeys.length > 0 && !brandingKeys.includes(prevBranding) ? brandingKeys[0] : prevBranding
+        );
+        setJumlah((prevJumlah) => (prevJumlah < initialMoq ? initialMoq : prevJumlah));
       }
     }
-  }, [targetSelection, kalkulatorConfig, bahanKeys, brandingKeys, bahan, branding, jumlah, initialMoq]);
+  }, [targetSelection, kalkulatorConfig, bahanKeys, brandingKeys, initialMoq]);
 
   // Live price estimation calculation
   const estimasiResult = hitungEstimasi(

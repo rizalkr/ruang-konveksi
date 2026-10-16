@@ -227,6 +227,7 @@ export function ImageGalleryModal({
 
   return (
     <div
+      id="image-gallery-modal"
       role="dialog"
       aria-modal="true"
       aria-label={title ? `Galeri foto ${title}` : "Galeri foto produk"}

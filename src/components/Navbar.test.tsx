@@ -110,6 +110,25 @@ describe("Navbar Component", () => {
     expect(html).toContain("md:bg-white");
   });
 
+  it("renders Option A mobile slide-down drawer with solid white background and transitions", () => {
+    const html = renderToString(
+      <Navbar config={demoGenerikConfig} sections={sections} />
+    );
+
+    // Mobile drawer element
+    expect(html).toContain('id="mobile-nav-menu"');
+    expect(html).toContain('role="dialog"');
+    expect(html).toContain('aria-label="Menu navigasi"');
+    expect(html).toContain("bg-white");
+    expect(html).toContain("transition-all duration-300 ease-in-out");
+    expect(html).toContain("md:hidden");
+
+    // Sibling dim backdrop overlay
+    expect(html).toContain("bg-ink/40");
+    expect(html).toContain("backdrop-blur-xs");
+    expect(html).toContain("transition-opacity duration-300");
+  });
+
   it("contains no emoticons or emojis in rendered navbar output", () => {
     const html = renderToString(
       <Navbar config={demoGenerikConfig} sections={sections} />
