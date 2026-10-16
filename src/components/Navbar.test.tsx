@@ -89,5 +89,34 @@ describe("Navbar Component", () => {
 
     expect(html).toContain('id="beranda"');
   });
+
+  it("applies mobile glassmorphism with backdrop blur and low-opacity Deep Petrol border", () => {
+    const html = renderToString(
+      <Navbar config={demoGenerikConfig} sections={sections} />
+    );
+
+    expect(html).toContain("max-md:backdrop-blur-xl");
+    expect(html).toContain("max-md:border-[#153E46]/10");
+    expect(html).toContain("max-md:bg-[#F7F5F0]");
+    expect(html).toContain("max-md:supports-[backdrop-filter]:bg-[#F7F5F0]/80");
+  });
+
+  it("preserves clean desktop navbar styling and border tokens", () => {
+    const html = renderToString(
+      <Navbar config={demoGenerikConfig} sections={sections} />
+    );
+
+    expect(html).toContain("md:border-mist");
+    expect(html).toContain("md:bg-white");
+  });
+
+  it("contains no emoticons or emojis in rendered navbar output", () => {
+    const html = renderToString(
+      <Navbar config={demoGenerikConfig} sections={sections} />
+    );
+
+    const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
+    expect(emojiRegex.test(html)).toBe(false);
+  });
 });
 

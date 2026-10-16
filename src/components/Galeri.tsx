@@ -2,7 +2,6 @@
 
 import React, { useState, useCallback } from "react";
 import { Images } from "lucide-react";
-import { usePemesanan } from "@/context/PemesananContext";
 import { ImageGalleryModal } from "./ImageGalleryModal";
 
 export interface GaleriProps {
@@ -17,14 +16,13 @@ export interface GaleriProps {
  * The entire preview banner is interactive and opens the shared accessible ImageGalleryModal
  * containing the full collection of workshop documentary photographs.
  */
-export function Galeri({ foto, namaBisnis, availableProducts }: GaleriProps) {
+export function Galeri({ foto, namaBisnis }: GaleriProps) {
   const validFoto = (foto || [])
     .map((src) => (typeof src === "string" ? src.trim() : ""))
     .filter((src) => src.length > 0);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const { selectProduk } = usePemesanan();
 
   const businessName =
     typeof namaBisnis === "string" && namaBisnis.trim().length > 0
@@ -39,34 +37,6 @@ export function Galeri({ foto, namaBisnis, availableProducts }: GaleriProps) {
   const handleCloseModal = useCallback(() => {
     setModalOpen(false);
   }, []);
-
-  const handleCtaClick = useCallback(
-    (index: number) => {
-      const currentSrc = validFoto[index] || "";
-      const filename = currentSrc.split("/").pop()?.toLowerCase() || "";
-
-      let matchedCategory: string | undefined;
-      if (filename.includes("pdh")) matchedCategory = "PDH";
-      else if (filename.includes("kaos")) matchedCategory = "Kaos";
-      else if (filename.includes("jaket")) matchedCategory = "Jaket";
-      else if (filename.includes("almamater")) matchedCategory = "Almamater";
-      else if (filename.includes("wearpack")) matchedCategory = "Wearpack";
-      else if (filename.includes("jersey")) matchedCategory = "Jersey";
-      else if (filename.includes("seragam")) matchedCategory = "Seragam Sekolah";
-
-      if (matchedCategory) {
-        selectProduk(matchedCategory, availableProducts);
-      } else {
-        if (typeof window !== "undefined") {
-          const el = document.getElementById("kalkulator");
-          if (el) {
-            el.scrollIntoView({ behavior: "smooth" });
-          }
-        }
-      }
-    },
-    [validFoto, selectProduk, availableProducts]
-  );
 
   if (validFoto.length === 0) {
     return null;
@@ -128,7 +98,7 @@ export function Galeri({ foto, namaBisnis, availableProducts }: GaleriProps) {
         </button>
       </div>
 
-      {/* Shared Image Gallery Modal displaying the full collection */}
+      {/* Shared Image Gallery Modal displaying the full collection without calculator CTA */}
       {modalOpen && (
         <ImageGalleryModal
           isOpen={modalOpen}
@@ -140,8 +110,6 @@ export function Galeri({ foto, namaBisnis, availableProducts }: GaleriProps) {
           }))}
           initialIndex={selectedIndex}
           title={`Galeri ${businessName}`}
-          ctaText="Hitung Estimasi"
-          onCtaClick={handleCtaClick}
         />
       )}
     </section>

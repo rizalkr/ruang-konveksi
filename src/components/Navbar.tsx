@@ -64,10 +64,10 @@ export function Navbar({ config, sections }: NavbarProps) {
   return (
     <header
       id="beranda"
-      className={`sticky top-0 z-50 w-full transition-shadow duration-200 ${
+      className={`sticky top-0 z-50 w-full transition-all duration-200 border-b max-md:border-[#153E46]/10 md:border-mist max-md:bg-[#F7F5F0] max-md:supports-[backdrop-filter]:bg-[#F7F5F0]/80 max-md:backdrop-blur-xl ${
         isScrolled
-          ? "bg-white/95 shadow-sm backdrop-blur-sm border-b border-mist"
-          : "bg-white border-b border-mist"
+          ? "max-md:shadow-sm md:bg-white/95 md:shadow-sm md:backdrop-blur-sm"
+          : "max-md:shadow-none md:bg-white md:shadow-none"
       }`}
     >
       <nav

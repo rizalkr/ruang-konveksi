@@ -90,10 +90,15 @@ export function ImageGalleryModal({
 
   const previousActiveElement = useRef<HTMLElement | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
+  const shouldRestoreFocus = useRef<boolean>(true);
 
   // Focus trap and body scroll lock
   useEffect(() => {
     if (!isOpen) return;
+
+    shouldRestoreFocus.current = true;  
+
+    shouldRestoreFocus.current = true;
 
     if (typeof document !== "undefined") {
       previousActiveElement.current = document.activeElement as HTMLElement;
@@ -113,10 +118,11 @@ export function ImageGalleryModal({
         clearTimeout(timer);
         document.body.style.overflow = originalOverflow;
         if (
+          shouldRestoreFocus.current &&
           previousActiveElement.current &&
           typeof previousActiveElement.current.focus === "function"
         ) {
-          previousActiveElement.current.focus();
+          previousActiveElement.current.focus({ preventScroll: true });
         }
       };
     }
@@ -303,7 +309,11 @@ export function ImageGalleryModal({
         </div>
 
         {/* Footer with action buttons */}
-        <div className="flex flex-col-reverse gap-2 border-t border-mist p-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div
+          className={`flex flex-col-reverse gap-2 border-t border-mist p-4 sm:flex-row sm:items-center ${
+            onCtaClick ? "sm:justify-between" : "sm:justify-end"
+          } sm:px-6`}
+        >
           <button
             type="button"
             onClick={onClose}
@@ -316,8 +326,15 @@ export function ImageGalleryModal({
             <button
               type="button"
               onClick={() => {
+                shouldRestoreFocus.current = false;
+                if (typeof document !== "undefined") {
+                  document.body.style.overflow = "";
+                }
                 onClose();
                 onCtaClick(currentIndex);
+                if (typeof window !== "undefined") {
+                  window.location.hash = "#kalkulator";
+                }
               }}
               className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
             >

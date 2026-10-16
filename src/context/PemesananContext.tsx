@@ -62,10 +62,15 @@ export function PemesananProvider({ children }: PemesananProviderProps) {
 
       // Smooth scroll to kalkulator section
       if (typeof window !== "undefined") {
-        const targetElement = document.getElementById("kalkulator");
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: "smooth" });
-        }
+        const scrollToTarget = () => {
+          const targetElement = document.getElementById("kalkulator");
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: "smooth" });
+          }
+        };
+
+        scrollToTarget();
+        setTimeout(scrollToTarget, 60);
       }
     },
     []

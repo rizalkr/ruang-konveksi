@@ -189,6 +189,22 @@ async function main() {
         const windowInnerWidth = window.innerWidth;
         const hasHorizontalScroll = scrollWidth > clientWidth;
 
+        // Inspect Navbar header and mobile glassmorphism
+        const header = document.querySelector('header#beranda');
+        let navbarInfo = null;
+        if (header) {
+          const rect = header.getBoundingClientRect();
+          const style = window.getComputedStyle(header);
+          navbarInfo = {
+            width: Math.round(rect.width * 100) / 100,
+            height: Math.round(rect.height * 100) / 100,
+            isSticky: style.position === 'sticky',
+            backdropFilter: style.backdropFilter || style.webkitBackdropFilter || '',
+            backgroundColor: style.backgroundColor,
+            withinViewport: rect.left >= 0 && rect.right <= clientWidth
+          };
+        }
+
         // Inspect hero buttons
         const heroButtons = Array.from(document.querySelectorAll('section:first-of-type a')).map(a => {
           const rect = a.getBoundingClientRect();
@@ -409,6 +425,7 @@ async function main() {
           hasLokasiAlamat,
           hasLokasiJam,
           floatingWaBtnInfo,
+          navbarInfo,
           fcpTime,
           domContentLoadedTime
         };
@@ -438,6 +455,17 @@ async function main() {
       throw new Error(
         `Detected ${inspection.overflowingElementsCount} overflowing elements: ${JSON.stringify(inspection.overflowingElements)}`,
       );
+    }
+
+    // Navbar assertions
+    if (!inspection.navbarInfo) {
+      throw new Error("Navbar header#beranda was not found in page");
+    }
+    if (!inspection.navbarInfo.isSticky) {
+      throw new Error("Navbar header is not set to position: sticky");
+    }
+    if (!inspection.navbarInfo.withinViewport) {
+      throw new Error("Navbar header spills outside viewport boundaries");
     }
 
     // Hero buttons assertions
@@ -820,30 +848,41 @@ async function main() {
       throw new Error("Catalog modal missing 'Hitung Estimasi' CTA button");
     }
 
-    // Close modal via close button
+    // Click CTA button inside modal to test integration and automatic scrolling to calculator
     await sendCommand("Runtime.evaluate", {
       expression: `(() => {
-        const closeBtn = document.querySelector('[data-modal-close]');
-        if (closeBtn) closeBtn.click();
+        const dialog = document.querySelector('[role="dialog"]');
+        const ctaBtn = dialog?.querySelector('button.bg-brand-primary');
+        if (ctaBtn) ctaBtn.click();
       })()`,
     });
-    await wait(300);
+    await wait(600);
 
-    const modalClosedCheck = await sendCommand("Runtime.evaluate", {
+    const postCtaCheck = await sendCommand("Runtime.evaluate", {
       returnByValue: true,
       expression: `(() => {
         const dialog = document.querySelector('[role="dialog"]');
-        return { isClosed: !dialog, bodyOverflow: document.body.style.overflow };
+        const currentProduct = document.getElementById('kalkulator-produk')?.value;
+        const kalkulatorRect = document.getElementById('kalkulator')?.getBoundingClientRect();
+        return {
+          isClosed: !dialog,
+          bodyOverflow: document.body.style.overflow,
+          currentProduct,
+          kalkulatorTop: kalkulatorRect?.top
+        };
       })()`,
     });
 
-    if (!modalClosedCheck.result.value?.isClosed) {
-      throw new Error("Shared modal failed to close when close button was clicked");
+    if (!postCtaCheck.result.value?.isClosed) {
+      throw new Error("Shared modal failed to close when CTA button was clicked");
     }
-    if (modalClosedCheck.result.value.bodyOverflow === "hidden") {
-      throw new Error("Body scroll lock failed to release after closing modal");
+    if (postCtaCheck.result.value.bodyOverflow === "hidden") {
+      throw new Error("Body scroll lock failed to release after clicking modal CTA");
     }
-    console.log("Catalog detail modal tests passed: opened with 0px overflow, locked scroll, rendered CTA, and closed cleanly.");
+    if (postCtaCheck.result.value.currentProduct !== "PDH") {
+      throw new Error(`Modal CTA product auto-selection failed: expected 'PDH', found '${postCtaCheck.result.value?.currentProduct}'`);
+    }
+    console.log("Catalog detail modal CTA integration passed: closed cleanly, unlocked body, selected 'PDH', and navigated to calculator.");
 
     // Phase 5 Integration: Verify Catalog 'Hitung Estimasi' auto-selects product in Calculator
     console.log("Testing Catalog card 'Hitung Estimasi' -> Calculator auto-selection...");
@@ -897,16 +936,21 @@ async function main() {
         if (!dialog) return { found: false };
         const counterText = (dialog.querySelector('[aria-live="polite"]')?.textContent || '').trim();
         const nextBtn = dialog.querySelector('[aria-label="Gambar berikutnya"]');
+        const ctaBtn = Array.from(dialog.querySelectorAll('button')).find(btn => (btn.textContent || '').includes('Hitung Estimasi'));
         return {
           found: true,
           counterText,
-          hasNextBtn: Boolean(nextBtn)
+          hasNextBtn: Boolean(nextBtn),
+          hasCtaBtn: Boolean(ctaBtn)
         };
       })()`,
     });
 
     if (!galleryModalOpenCheck.result.value?.found) {
       throw new Error("Galeri thumbnail failed to open shared ImageGalleryModal");
+    }
+    if (galleryModalOpenCheck.result.value.hasCtaBtn) {
+      throw new Error("Galeri modal must not render 'Hitung Estimasi' CTA button");
     }
     if (galleryModalOpenCheck.result.value.counterText !== "1 / 10") {
       throw new Error(`Expected gallery indicator '1 / 10', found '${galleryModalOpenCheck.result.value.counterText}'`);

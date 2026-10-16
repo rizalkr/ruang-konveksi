@@ -122,6 +122,21 @@ describe("ImageGalleryModal Component", () => {
     expect(html).toContain("min-h-[48px]");
   });
 
+  it("does not render CTA action button when onCtaClick is omitted (e.g. in gallery modal)", () => {
+    const html = renderToString(
+      <ImageGalleryModal
+        isOpen={true}
+        onClose={vi.fn()}
+        images={sampleImages}
+        title="Galeri Workshop"
+      />
+    );
+
+    expect(html).not.toContain("Hitung Estimasi");
+    expect(html).not.toContain("bg-brand-primary");
+    expect(html).toContain("sm:justify-end");
+  });
+
   it("renders image with accessible alt text and preserved aspect ratio classes", () => {
     const html = renderToString(
       <ImageGalleryModal
