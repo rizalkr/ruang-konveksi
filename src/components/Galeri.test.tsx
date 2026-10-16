@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import React from "react";
 import { renderToString } from "react-dom/server";
 import { Galeri } from "./Galeri";
+import { demoGenerikConfig } from "@/config/demo-generik";
 
 // Dedicated test fixtures
 const fixtureEmptyImages: string[] = [];
@@ -93,6 +94,32 @@ describe("Galeri Component", () => {
     );
     expect(html).toContain("Workshop Konveksi");
     expect(html).toContain('alt="Dokumentasi hasil produksi Workshop Konveksi 1"');
+  });
+
+  it("wraps each image thumbnail in an interactive button with accessible label", () => {
+    const html = renderToString(
+      <Galeri foto={fixtureSampleImages} namaBisnis="Konveksi Maju" />
+    );
+
+    expect(html).toContain('type="button"');
+    fixtureSampleImages.forEach((_, idx) => {
+      expect(html).toContain(
+        `aria-label="Buka foto dokumentasi hasil produksi Konveksi Maju ${idx + 1}"`
+      );
+    });
+  });
+
+  it("renders expanded gallery list with 8 to 12 images from demo configuration", () => {
+    const html = renderToString(
+      <Galeri foto={demoGenerikConfig.galeri} namaBisnis={demoGenerikConfig.nama} />
+    );
+
+    expect(demoGenerikConfig.galeri.length).toBeGreaterThanOrEqual(8);
+    expect(demoGenerikConfig.galeri.length).toBeLessThanOrEqual(12);
+
+    for (const src of demoGenerikConfig.galeri) {
+      expect(html).toContain(`src="${src}"`);
+    }
   });
 
   it("contains no emoticons or emojis in the rendered output", () => {

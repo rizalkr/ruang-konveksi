@@ -47,12 +47,12 @@ describe("Hero Component (Product Editorial)", () => {
     expect(html).toContain("focus-visible:outline-neutral-900");
   });
 
-  it("renders Estimasi CTA button targeting #kalkulator with 'Hitung Estimasi' text", () => {
+  it("renders Katalog CTA button targeting #katalog with 'Lihat Katalog' text", () => {
     const html = renderToString(<Hero config={demoGenerikConfig} />);
 
     // Anchor link
-    expect(html).toContain('href="#kalkulator"');
-    expect(html).toContain("Hitung Estimasi");
+    expect(html).toContain('href="#katalog"');
+    expect(html).toContain("Lihat Katalog");
 
     // Typography & Contrast check
     expect(html).toContain("text-neutral-800");

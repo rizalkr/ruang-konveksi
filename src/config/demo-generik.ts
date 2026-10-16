@@ -20,13 +20,21 @@ export const demoGenerikConfig: BusinessConfig = {
     {
       nama: "Kaos",
       deskripsi: "Kaos komunitas, event, atau promosi berbahan katun adem dengan sablon berkualitas presisi.",
-      foto: ["/images/products/kaos.webp", "/images/products/kaos.jpg"],
+      foto: [
+        "/images/products/kaos.webp",
+        "/images/products/kaos-crewneck.webp",
+        "/images/products/kaos.jpg",
+      ],
       hargaMulai: 55000,
     },
     {
       nama: "Jaket",
       deskripsi: "Jaket parka, bomber, varsity, dan hoodie seragam untuk instansi dan komunitas.",
-      foto: ["/images/products/jaket.webp", "/images/products/jaket.jpg"],
+      foto: [
+        "/images/products/jaket.webp",
+        "/images/products/jaket-bomber.webp",
+        "/images/products/jaket.jpg",
+      ],
       hargaMulai: 135000,
     },
     {
@@ -38,7 +46,11 @@ export const demoGenerikConfig: BusinessConfig = {
     {
       nama: "Wearpack",
       deskripsi: "Pakaian kerja lapangan dan safety wearpack standar bengkel atau industri.",
-      foto: ["/images/products/wearpack.webp", "/images/products/wearpack.jpg"],
+      foto: [
+        "/images/products/wearpack.webp",
+        "/images/products/wearpack-industrial.webp",
+        "/images/products/wearpack.jpg",
+      ],
       hargaMulai: 140000,
     },
     {
@@ -94,10 +106,16 @@ export const demoGenerikConfig: BusinessConfig = {
     ],
   },
   galeri: [
-    "/images/placeholders/pdh.svg",
-    "/images/placeholders/kaos.svg",
-    "/images/placeholders/jaket.svg",
-    "/images/placeholders/jersey.svg",
+    "/images/products/pdh.webp",
+    "/images/products/kaos.webp",
+    "/images/products/kaos-crewneck.webp",
+    "/images/products/jaket.webp",
+    "/images/products/jaket-bomber.webp",
+    "/images/products/almamater.webp",
+    "/images/products/wearpack.webp",
+    "/images/products/wearpack-industrial.webp",
+    "/images/products/jersey.webp",
+    "/images/products/seragam-sekolah.webp",
   ],
   ulasan: [
     {
@@ -114,4 +132,3 @@ export const demoGenerikConfig: BusinessConfig = {
     },
   ],
 };
-

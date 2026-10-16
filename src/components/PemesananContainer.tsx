@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { BusinessConfig } from "@/config/types";
 import { formatRentangEstimasi, hitungEstimasi } from "@/lib/estimasi";
+import { usePemesanan } from "@/context/PemesananContext";
 import { Kalkulator } from "./Kalkulator";
 import { FormOrder } from "./FormOrder";
 
@@ -14,6 +15,7 @@ interface PemesananContainerProps {
  * Interactive Client Component synchronizing calculator state and WhatsApp order form.
  * Anchored visually with a Deep Petrol (brand-primary) section background as specified in the Workwear Textile design system.
  * Contains two white cards (Kalkulator & FormOrder) for maximum readability and crisp visual rhythm.
+ * Listens to catalog selection events from PemesananContext to dynamically select products and update live estimates.
  * Maintains id="kalkulator" for smooth anchor linking from Navbar, Hero, and Category cards.
  */
 export function PemesananContainer({ config }: PemesananContainerProps) {
@@ -37,6 +39,28 @@ export function PemesananContainer({ config }: PemesananContainerProps) {
     brandingKeys.includes("Sablon") ? "Sablon" : (brandingKeys[0] ?? "")
   );
   const [jumlah, setJumlah] = useState<number>(initialMoq);
+
+  // Sync state when a product is selected from Katalog or Modal
+  const { targetSelection } = usePemesanan();
+
+  useEffect(() => {
+    if (targetSelection?.produk) {
+      if (kalkulatorConfig?.produk && targetSelection.produk in kalkulatorConfig.produk) {
+        setProduk(targetSelection.produk);
+
+        // Retain existing bahan, branding, and jumlah if valid; otherwise fallback gracefully
+        if (bahanKeys.length > 0 && !bahanKeys.includes(bahan)) {
+          setBahan(bahanKeys[0]);
+        }
+        if (brandingKeys.length > 0 && !brandingKeys.includes(branding)) {
+          setBranding(brandingKeys[0]);
+        }
+        if (jumlah < initialMoq) {
+          setJumlah(initialMoq);
+        }
+      }
+    }
+  }, [targetSelection, kalkulatorConfig, bahanKeys, brandingKeys, bahan, branding, jumlah, initialMoq]);
 
   // Live price estimation calculation
   const estimasiResult = hitungEstimasi(

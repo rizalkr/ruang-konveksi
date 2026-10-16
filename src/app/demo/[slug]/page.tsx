@@ -12,6 +12,7 @@ import { Lokasi } from "@/components/Lokasi";
 import { Footer } from "@/components/Footer";
 import { TombolWA } from "@/components/TombolWA";
 import { isValidHexColor, deriveHoverColor } from "@/lib/color";
+import { PemesananProvider } from "@/context/PemesananContext";
 
 export const dynamicParams = false;
 
@@ -114,33 +115,42 @@ export default async function DemoPage({ params }: DemoPageProps) {
       }
       className="min-h-screen bg-page-bg text-ink"
     >
-      <Navbar
-        config={config}
-        sections={sections}
-      />
-      <main className="space-y-16 pb-16">
-        <Hero config={config} />
-        <KatalogKategori kategori={config.kategori} />
-        <ProsesMOQ produksi={config.produksi} moq={config.kalkulator.moq} />
-        <PemesananContainer config={config} />
-        {config.galeri && config.galeri.length > 0 && (
-          <Galeri foto={config.galeri} namaBisnis={config.nama} />
-        )}
-        {config.ulasan && config.ulasan.length > 0 && (
-          <Ulasan ulasan={config.ulasan} />
-        )}
-        <Lokasi
-          alamat={config.alamat}
-          jamOperasional={config.jamOperasional}
-          petaUrl={config.petaUrl}
+      <PemesananProvider>
+        <Navbar
+          config={config}
+          sections={sections}
         />
-        <TombolWA
-          wa={config.wa}
-          namaBisnis={config.nama}
-          warnaUtama={config.warnaUtama}
-        />
-      </main>
-      <Footer config={config} sections={sections} />
+        <main className="space-y-16 pb-16">
+          <Hero config={config} />
+          <KatalogKategori
+            kategori={config.kategori}
+            availableProducts={config.kalkulator?.produk}
+          />
+          <ProsesMOQ produksi={config.produksi} moq={config.kalkulator.moq} />
+          <PemesananContainer config={config} />
+          {config.galeri && config.galeri.length > 0 && (
+            <Galeri
+              foto={config.galeri}
+              namaBisnis={config.nama}
+              availableProducts={config.kalkulator?.produk}
+            />
+          )}
+          {config.ulasan && config.ulasan.length > 0 && (
+            <Ulasan ulasan={config.ulasan} />
+          )}
+          <Lokasi
+            alamat={config.alamat}
+            jamOperasional={config.jamOperasional}
+            petaUrl={config.petaUrl}
+          />
+          <TombolWA
+            wa={config.wa}
+            namaBisnis={config.nama}
+            warnaUtama={config.warnaUtama}
+          />
+        </main>
+        <Footer config={config} sections={sections} />
+      </PemesananProvider>
     </div>
   );
 }

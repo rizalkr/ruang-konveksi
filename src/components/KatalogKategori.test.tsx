@@ -39,6 +39,16 @@ describe("KatalogKategori Component", () => {
     expect(html).toContain("min-h-[48px]");
   });
 
+  it("renders 'Lihat Contoh Produk' detail buttons and image modal triggers for all categories", () => {
+    const html = renderToString(<KatalogKategori kategori={demoGenerikConfig.kategori} />);
+
+    expect(html).toContain("Lihat Contoh Produk");
+    for (const item of demoGenerikConfig.kategori) {
+      expect(html).toContain(`aria-label="Lihat contoh produk ${item.nama}"`);
+      expect(html).toContain(`aria-label="Buka detail contoh produk ${item.nama}"`);
+    }
+  });
+
   it("renders <img> tag using the first photo from array with lazy loading", () => {
     const html = renderToString(<KatalogKategori kategori={demoGenerikConfig.kategori} />);
 

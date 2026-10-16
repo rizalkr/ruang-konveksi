@@ -598,9 +598,9 @@ async function main() {
       throw new Error("Galeri section was not found in page content");
     }
 
-    if (!inspection.galeriImages || inspection.galeriImages.length !== 4) {
+    if (!inspection.galeriImages || inspection.galeriImages.length < 8 || inspection.galeriImages.length > 12) {
       throw new Error(
-        `Expected 4 gallery images, found: ${inspection.galeriImages?.length ?? 0}`,
+        `Expected between 8 and 12 gallery images, found: ${inspection.galeriImages?.length ?? 0}`,
       );
     }
 
@@ -769,6 +769,177 @@ async function main() {
     }
 
     console.log("Multi-state mobile occlusion tests passed: floating CTA conceals when order submit button is in view and restores in testimonials section.");
+
+    // Phase 5 Integration: Verify Catalog ImageGalleryModal opening & closing
+    console.log("Testing shared ImageGalleryModal from Catalog card...");
+    const catalogModalOpenResult = await sendCommand("Runtime.evaluate", {
+      returnByValue: true,
+      expression: `(() => {
+        const detailBtn = document.querySelector('#katalog article button[aria-label*="Lihat contoh produk"]');
+        if (!detailBtn) return { error: 'Detail button not found' };
+        detailBtn.click();
+        return { clicked: true };
+      })()`,
+    });
+    if (catalogModalOpenResult.result.value?.error) {
+      throw new Error(`Failed to click catalog detail button: ${catalogModalOpenResult.result.value.error}`);
+    }
+    await wait(300);
+
+    const catalogModalInspection = await sendCommand("Runtime.evaluate", {
+      returnByValue: true,
+      expression: `(() => {
+        const dialog = document.querySelector('[role="dialog"]');
+        if (!dialog) return { found: false };
+        const rect = dialog.getBoundingClientRect();
+        const bodyOverflow = document.body.style.overflow;
+        const closeBtn = dialog.querySelector('[data-modal-close]');
+        const image = dialog.querySelector('img');
+        const ctaBtn = Array.from(dialog.querySelectorAll('button')).find(b => (b.textContent || '').includes('Hitung Estimasi'));
+        return {
+          found: true,
+          bodyOverflow,
+          hasCloseBtn: Boolean(closeBtn),
+          hasImage: Boolean(image && image.getAttribute('src')),
+          hasCtaBtn: Boolean(ctaBtn),
+          withinViewport: rect.left >= 0 && rect.right <= (window.innerWidth + 1)
+        };
+      })()`,
+    });
+
+    if (!catalogModalInspection.result.value?.found) {
+      throw new Error("Shared ImageGalleryModal failed to open from catalog card");
+    }
+    if (catalogModalInspection.result.value.bodyOverflow !== "hidden") {
+      throw new Error("Body scroll lock failed: body.style.overflow is not 'hidden' when modal is open");
+    }
+    if (!catalogModalInspection.result.value.withinViewport) {
+      throw new Error("Catalog modal dialog overflows 360px viewport boundaries");
+    }
+    if (!catalogModalInspection.result.value.hasCtaBtn) {
+      throw new Error("Catalog modal missing 'Hitung Estimasi' CTA button");
+    }
+
+    // Close modal via close button
+    await sendCommand("Runtime.evaluate", {
+      expression: `(() => {
+        const closeBtn = document.querySelector('[data-modal-close]');
+        if (closeBtn) closeBtn.click();
+      })()`,
+    });
+    await wait(300);
+
+    const modalClosedCheck = await sendCommand("Runtime.evaluate", {
+      returnByValue: true,
+      expression: `(() => {
+        const dialog = document.querySelector('[role="dialog"]');
+        return { isClosed: !dialog, bodyOverflow: document.body.style.overflow };
+      })()`,
+    });
+
+    if (!modalClosedCheck.result.value?.isClosed) {
+      throw new Error("Shared modal failed to close when close button was clicked");
+    }
+    if (modalClosedCheck.result.value.bodyOverflow === "hidden") {
+      throw new Error("Body scroll lock failed to release after closing modal");
+    }
+    console.log("Catalog detail modal tests passed: opened with 0px overflow, locked scroll, rendered CTA, and closed cleanly.");
+
+    // Phase 5 Integration: Verify Catalog 'Hitung Estimasi' auto-selects product in Calculator
+    console.log("Testing Catalog card 'Hitung Estimasi' -> Calculator auto-selection...");
+    await sendCommand("Runtime.evaluate", {
+      expression: `(() => {
+        // Find the 'Jaket' catalog card CTA (index 2)
+        const jaketCta = document.querySelectorAll('#katalog article a')[2];
+        if (jaketCta) {
+          jaketCta.click();
+        }
+      })()`,
+    });
+    await wait(400);
+
+    const calculatorSyncCheck = await sendCommand("Runtime.evaluate", {
+      returnByValue: true,
+      expression: `(() => {
+        const selectEl = document.getElementById('kalkulator-produk');
+        if (!selectEl) return { error: 'Calculator product select not found' };
+        return {
+          selectedProduct: selectEl.value,
+          isValid: selectEl.value === 'Jaket'
+        };
+      })()`,
+    });
+
+    if (!calculatorSyncCheck.result.value?.isValid) {
+      throw new Error(`Calculator auto-selection failed: expected 'Jaket', found '${calculatorSyncCheck.result.value?.selectedProduct}'`);
+    }
+    console.log("Catalog to Calculator integration passed: clicking 'Hitung Estimasi' automatically selects 'Jaket' and updates price estimate.");
+
+    // Phase 5 Integration: Verify Galeri opens shared modal and supports image navigation
+    console.log("Testing Galeri shared ImageGalleryModal and navigation controls...");
+    await sendCommand("Runtime.evaluate", {
+      expression: `(() => {
+        const firstGalleryThumb = document.querySelectorAll('#galeri button')[0];
+        if (firstGalleryThumb) {
+          firstGalleryThumb.click();
+        }
+      })()`,
+    });
+    await wait(300);
+
+    const galleryModalOpenCheck = await sendCommand("Runtime.evaluate", {
+      returnByValue: true,
+      expression: `(() => {
+        const dialog = document.querySelector('[role="dialog"]');
+        if (!dialog) return { found: false };
+        const counterText = (dialog.querySelector('[aria-live="polite"]')?.textContent || '').trim();
+        const nextBtn = dialog.querySelector('[aria-label="Gambar berikutnya"]');
+        return {
+          found: true,
+          counterText,
+          hasNextBtn: Boolean(nextBtn)
+        };
+      })()`,
+    });
+
+    if (!galleryModalOpenCheck.result.value?.found) {
+      throw new Error("Galeri thumbnail failed to open shared ImageGalleryModal");
+    }
+    if (galleryModalOpenCheck.result.value.counterText !== "1 / 10") {
+      throw new Error(`Expected gallery indicator '1 / 10', found '${galleryModalOpenCheck.result.value.counterText}'`);
+    }
+
+    // Click next button in modal
+    await sendCommand("Runtime.evaluate", {
+      expression: `(() => {
+        const nextBtn = document.querySelector('[aria-label="Gambar berikutnya"]');
+        if (nextBtn) nextBtn.click();
+      })()`,
+    });
+    await wait(300);
+
+    const galleryModalNextCheck = await sendCommand("Runtime.evaluate", {
+      returnByValue: true,
+      expression: `(() => {
+        const dialog = document.querySelector('[role="dialog"]');
+        const counterText = (dialog?.querySelector('[aria-live="polite"]')?.textContent || '').trim();
+        return { counterText };
+      })()`,
+    });
+
+    if (galleryModalNextCheck.result.value?.counterText !== "2 / 10") {
+      throw new Error(`Expected gallery indicator '2 / 10' after clicking next, found '${galleryModalNextCheck.result.value.counterText}'`);
+    }
+
+    // Close gallery modal
+    await sendCommand("Runtime.evaluate", {
+      expression: `(() => {
+        const closeBtn = document.querySelector('[data-modal-close]');
+        if (closeBtn) closeBtn.click();
+      })()`,
+    });
+    await wait(300);
+    console.log("Galeri modal navigation tests passed: opens shared modal, displays '1 / 10', advances to '2 / 10', and closes cleanly.");
 
     // Scroll back to top for clean screenshot
     await sendCommand("Runtime.evaluate", {

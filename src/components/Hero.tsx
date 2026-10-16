@@ -1,7 +1,7 @@
 import type { BusinessConfig } from "@/config/types";
 import { getAccessibleTextColor } from "@/lib/color";
 import { createInquiryWhatsAppUrl } from "@/lib/whatsapp";
-import { ArrowRight, Calculator, MessageCircle } from "lucide-react";
+import { ArrowRight, LayoutGrid, MessageCircle } from "lucide-react";
 
 interface HeroProps {
   config: BusinessConfig;
@@ -60,11 +60,11 @@ export function Hero({ config }: HeroProps) {
               </a>
 
               <a
-                href="#kalkulator"
+                href="#katalog"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-steel bg-white px-6 py-3.5 text-[19px] font-bold sm:text-xl text-neutral-800 shadow-sm hover:bg-page-bg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 transition-colors cursor-pointer"
               >
-                <Calculator className="w-5 h-5 flex-shrink-0 text-slate" aria-hidden="true" />
-                <span>Hitung Estimasi</span>
+                <LayoutGrid className="w-5 h-5 flex-shrink-0 text-slate" aria-hidden="true" />
+                <span>Lihat Katalog</span>
                 <ArrowRight className="w-4 h-4 flex-shrink-0 text-slate" aria-hidden="true" />
               </a>
             </div>
