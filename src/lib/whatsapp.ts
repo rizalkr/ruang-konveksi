@@ -5,6 +5,7 @@
 export type OrderMessageParams = {
   phone: string;
   namaBisnis: string;
+  nama?: string;
   produk: string;
   bahan: string;
   branding: string;
@@ -44,8 +45,16 @@ export function formatOrderMessage(params: Omit<OrderMessageParams, "phone">): s
   const size = params.ukuran && params.ukuran.trim() ? params.ukuran.trim() : "-";
   const estimasi = params.estimasi && params.estimasi.trim() ? params.estimasi.trim() : "-";
 
-  return [
+  const lines = [
     `Halo ${params.namaBisnis}, saya ingin pesan.`,
+  ];
+
+  if (params.nama !== undefined) {
+    const name = params.nama.trim() ? params.nama.trim() : "-";
+    lines.push(`Nama: ${name}`);
+  }
+
+  lines.push(
     `Produk: ${params.produk}`,
     `Bahan: ${params.bahan}`,
     `Branding: ${params.branding}`,
@@ -53,7 +62,9 @@ export function formatOrderMessage(params: Omit<OrderMessageParams, "phone">): s
     `Ukuran: ${size}`,
     `Catatan: ${note}`,
     `Estimasi dari web: ${estimasi}`,
-  ].join("\n");
+  );
+
+  return lines.join("\n");
 }
 
 /**

@@ -32,23 +32,16 @@ export function FormOrder({
 
   const textColor = getAccessibleTextColor(warnaUtama);
 
-  // Combine customer name and notes cleanly
-  const combinedNotes = [
-    nama.trim() ? `Nama: ${nama.trim()}` : "",
-    catatan.trim(),
-  ]
-    .filter(Boolean)
-    .join(". ");
-
   const waUrl = createOrderWhatsAppUrl({
     phone,
     namaBisnis,
+    nama: nama.trim(),
     produk,
     bahan,
     branding,
     jumlah,
     ukuran: ukuran.trim(),
-    catatan: combinedNotes,
+    catatan: catatan.trim(),
     estimasi: estimasiString,
   });
 

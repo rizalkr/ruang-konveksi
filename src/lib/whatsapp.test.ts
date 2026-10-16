@@ -57,6 +57,52 @@ describe("formatOrderMessage", () => {
     expect(message).toBe(expected);
   });
 
+  it("formats customer name on its own distinct line without corrupting catatan", () => {
+    const message = formatOrderMessage({
+      namaBisnis: "Rumah Konveksi",
+      nama: "Iyem",
+      produk: "Almamater",
+      bahan: "Katun",
+      branding: "Bordir",
+      jumlah: 100,
+      ukuran: "S: 10, L:50, XL : 40",
+      catatan: "Cepat",
+      estimasi: "Rp 13.464.000 - Rp 16.456.000",
+    });
+
+    const expected = [
+      "Halo Rumah Konveksi, saya ingin pesan.",
+      "Nama: Iyem",
+      "Produk: Almamater",
+      "Bahan: Katun",
+      "Branding: Bordir",
+      "Jumlah: 100 pcs",
+      "Ukuran: S: 10, L:50, XL : 40",
+      "Catatan: Cepat",
+      "Estimasi dari web: Rp 13.464.000 - Rp 16.456.000",
+    ].join("\n");
+
+    expect(message).toBe(expected);
+    expect(message).not.toContain("Catatan: Nama:");
+  });
+
+  it("falls back to '-' when nama is empty string", () => {
+    const message = formatOrderMessage({
+      namaBisnis: "Rumah Konveksi",
+      nama: "",
+      produk: "Kaos",
+      bahan: "Katun Combed",
+      branding: "Sablon",
+      jumlah: 24,
+      ukuran: "L: 24",
+      catatan: "Sablon depan",
+      estimasi: "Rp 1.500.000 - Rp 1.800.000",
+    });
+
+    expect(message).toContain("Nama: -");
+    expect(message).toContain("Catatan: Sablon depan");
+  });
+
   it("falls back to '-' when catatan is empty or whitespace", () => {
     const msgEmpty = formatOrderMessage({
       namaBisnis: "Konveksi Jaya",

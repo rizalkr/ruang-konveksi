@@ -60,6 +60,9 @@ describe("FormOrder Component", () => {
     expect(decoded).toContain("Bahan: Katun Combed");
     expect(decoded).toContain("Branding: Sablon");
     expect(decoded).toContain("Jumlah: 50 pcs");
+    expect(decoded).toContain("Nama: -");
+    expect(decoded).toContain("Catatan: -");
+    expect(decoded).not.toContain("Catatan: Nama:");
     expect(decoded).toContain("Estimasi dari web: Rp 3.105.000 - Rp 3.795.000");
   });
 
