@@ -1,6 +1,7 @@
 {
   "name": "ruang-konveksi",
   "version": "0.1.0",
+  "author": "Rizal Kurnia, Nalar Solusi Digital",
   "private": true,
   "scripts": {
     "dev": "next dev",

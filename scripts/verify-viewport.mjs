@@ -598,9 +598,9 @@ async function main() {
       throw new Error("Galeri section was not found in page content");
     }
 
-    if (!inspection.galeriImages || inspection.galeriImages.length < 8 || inspection.galeriImages.length > 12) {
+    if (!inspection.galeriImages || inspection.galeriImages.length !== 1) {
       throw new Error(
-        `Expected between 8 and 12 gallery images, found: ${inspection.galeriImages?.length ?? 0}`,
+        `Expected exactly 1 gallery preview image on main page, found: ${inspection.galeriImages?.length ?? 0}`,
       );
     }
 
@@ -879,10 +879,13 @@ async function main() {
     console.log("Testing Galeri shared ImageGalleryModal and navigation controls...");
     await sendCommand("Runtime.evaluate", {
       expression: `(() => {
-        const firstGalleryThumb = document.querySelectorAll('#galeri button')[0];
-        if (firstGalleryThumb) {
-          firstGalleryThumb.click();
+        const previewButton = document.querySelectorAll('#galeri button')[0];
+        if (!previewButton) throw new Error('Galeri preview button not found');
+        const text = (previewButton.textContent || '').trim();
+        if (!text.includes('Lihat Semua Foto (10 Foto)')) {
+          throw new Error('Galeri preview missing expected badge text: ' + text);
         }
+        previewButton.click();
       })()`,
     });
     await wait(300);

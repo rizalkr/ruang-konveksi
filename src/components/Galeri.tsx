@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { ZoomIn } from "lucide-react";
+import { Images } from "lucide-react";
 import { usePemesanan } from "@/context/PemesananContext";
 import { ImageGalleryModal } from "./ImageGalleryModal";
 
@@ -12,10 +12,10 @@ export interface GaleriProps {
 }
 
 /**
- * Responsive photo gallery showcasing workshop production output and craftsmanship.
+ * Single-image preview gallery component showcasing workshop production output and craftsmanship.
  * Styled with Workwear Textile tokens: mist borders, off-white fallback surfaces, ink/slate typography.
- * Utilizes native lazy-loaded standard img tags for optimal mobile performance and data conservation.
- * Tapping any thumbnail opens the shared accessible ImageGalleryModal starting at the clicked photo index.
+ * The entire preview banner is interactive and opens the shared accessible ImageGalleryModal
+ * containing the full collection of workshop documentary photographs.
  */
 export function Galeri({ foto, namaBisnis, availableProducts }: GaleriProps) {
   const validFoto = (foto || [])
@@ -31,7 +31,7 @@ export function Galeri({ foto, namaBisnis, availableProducts }: GaleriProps) {
       ? namaBisnis.trim()
       : "Workshop Konveksi";
 
-  const handleOpenModal = useCallback((index: number) => {
+  const handleOpenModal = useCallback((index = 0) => {
     setSelectedIndex(index);
     setModalOpen(true);
   }, []);
@@ -72,13 +72,16 @@ export function Galeri({ foto, namaBisnis, availableProducts }: GaleriProps) {
     return null;
   }
 
+  // Consistent primary preview image from available gallery data
+  const previewImage = validFoto[0];
+
   return (
     <section
       id="galeri"
       aria-label="Galeri Hasil Produksi"
       className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8"
     >
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
           Galeri Hasil Produksi
         </h2>
@@ -87,36 +90,45 @@ export function Galeri({ foto, namaBisnis, availableProducts }: GaleriProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
-        {validFoto.map((src, index) => (
-          <button
-            key={`${src}-${index}`}
-            type="button"
-            onClick={() => handleOpenModal(index)}
-            aria-label={`Buka foto dokumentasi hasil produksi ${businessName} ${index + 1}`}
-            className="group relative aspect-square overflow-hidden rounded-2xl border border-mist bg-page-bg text-left shadow-sm transition-all hover:border-steel hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
-          >
-            <img
-              src={src}
-              alt={`Dokumentasi hasil produksi ${businessName} ${index + 1}`}
-              loading="lazy"
-              decoding="async"
-              width={400}
-              height={400}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-            {/* Subtle hover overlay affordance */}
-            <div className="absolute inset-0 flex items-center justify-center bg-ink/20 opacity-0 transition-opacity group-hover:opacity-100">
-              <span className="inline-flex items-center gap-1.5 rounded-lg bg-ink/80 px-2.5 py-1 text-xs font-medium text-white shadow-sm backdrop-blur-sm">
-                <ZoomIn className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Perbesar</span>
+      {/* Single-image preview banner */}
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-mist bg-page-bg shadow-sm transition-all hover:border-steel hover:shadow-md">
+        <button
+          type="button"
+          onClick={() => handleOpenModal(0)}
+          aria-label={`Buka galeri foto ${businessName}. Tersedia ${validFoto.length} foto dokumentasi.`}
+          className="group relative flex aspect-[16/10] sm:aspect-[21/9] w-full items-center justify-center overflow-hidden text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+        >
+          <img
+            src={previewImage}
+            alt={`Preview dokumentasi hasil produksi ${businessName}`}
+            loading="lazy"
+            decoding="async"
+            width={1200}
+            height={600}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+
+          {/* Legibility scrim gradient overlay */}
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent transition-opacity group-hover:from-ink/90"
+            aria-hidden="true"
+          />
+
+          {/* Floating CTA Badge */}
+          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6">
+            <span className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-white/95 px-4 py-2.5 text-xs sm:text-sm font-bold text-ink shadow-lg backdrop-blur-sm transition-all group-hover:bg-white group-hover:scale-105 group-hover:shadow-xl">
+              <Images className="h-4 w-4 sm:h-5 sm:w-5 text-brand-primary flex-shrink-0" aria-hidden="true" />
+              <span>
+                {validFoto.length > 1
+                  ? `Lihat Semua Foto (${validFoto.length} Foto)`
+                  : "Lihat Semua Foto"}
               </span>
-            </div>
-          </button>
-        ))}
+            </span>
+          </div>
+        </button>
       </div>
 
-      {/* Shared Image Gallery Modal */}
+      {/* Shared Image Gallery Modal displaying the full collection */}
       {modalOpen && (
         <ImageGalleryModal
           isOpen={modalOpen}
